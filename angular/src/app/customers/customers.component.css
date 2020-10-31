@@ -1,0 +1,395 @@
+ 
+
+
+
+.drawer-add-rooms{
+  position: absolute;
+  width: 250px;
+  height: 180px;
+  display: block;
+  flex-direction: column;
+  flex-basis: auto;
+  flex-wrap: wrap;
+  right: 1100px !important;
+  left: 594px !important;
+  top: 148px !important;
+
+
+}
+
+ 
+ 
+ .add-select-room {
+   border: 2px solid #ebeff2;
+   border-radius: 5px;
+   padding: 20px 0px;
+   margin: 37px 20px 0;
+   font-size: 12px;
+   color: #2292a7;
+   font-weight: 600;
+   overflow: auto;
+   width: 200px;
+ }
+
+
+ .add-select-room div {
+   float: left;
+   width: 50%;
+   text-align: center;
+   position: relative;
+ }
+
+ .add-select-room strong {
+   display: block;
+   color: #adb8c2;
+   font-size: 11px;
+   font-weight: 700;
+ }
+
+ .add-select-room span {
+   width: 2px;
+   height: 40px;
+   position: absolute;
+   right: 0;
+   top: 0;
+   background: #ebeff2;
+ }
+
+ div.ends {
+   color: #f38020;
+ }
+
+ .drawer-rooms-header {
+   display: block;
+   align-items: center;
+   flex-direction: column;
+   position: absolute;
+   color: black;
+   justify-content: space-between;
+   flex-basis: auto;
+   flex-wrap: wrap;
+   top: 73px !important;
+   left: 505px !important;
+
+  
+ }
+
+ .drawer-rooms-div-select {
+  display: block;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  color: black;
+  align-items: center;
+  justify-content: space-between;
+  flex-basis: auto;
+  flex-wrap: wrap;
+  top: 147px !important;
+  left: 319px !important;
+  width:200px;
+
+ 
+}
+
+
+.drawer-rooms-h4-Id{
+  position:relative;
+  left:80px;
+}
+
+
+.drawer-rooms-h4-Rooms{
+  position:relative;
+  left:100px;
+}
+
+
+.drawer-select{
+  order:3;
+}
+
+
+
+.drawer-add-rooms h4{
+
+  position: relative;
+  left:50px;
+
+}
+
+
+
+ .select {
+   height: 100px;
+ }
+
+
+ .add-button {
+   position: relative;
+   bottom: 0%;
+ }
+
+
+ .add-custo-flex-div {
+   display: block;
+   flex-basis: auto;
+   flex-direction: column;
+   flex-wrap: wrap;
+   position: absolute;
+   left: 120px;
+   align-items: center;
+   justify-content: space-between;
+   top: 100px;
+   background-color: #FFFFFF;
+ }
+
+
+ .add-custo-flex-1 {
+   order: 1;
+   padding: 5px;
+
+ }
+
+ .add-custo-flex-2 {
+   order: 2;
+   padding: 5px;
+
+ }
+
+ .add-custo-flex-3{
+   order: 3;
+   padding: 5px;
+ }
+
+
+ .add-custo-flex-4 {
+   order: 4;
+   padding: 5px;
+
+ }
+
+ .add-custo-flex-5{
+   order: 5;
+   padding: 5px;
+
+ }
+
+
+ ::ng-deep nz-select {
+  width: 100%;
+}
+
+ ::ng-deep ant-table-tbody > tr > td{     
+  font-family: 'Biryani';
+  font-size: 15px;
+  color: #414f5a;
+
+ }
+
+
+ ::ng-deep .ant-table-thead>tr>th {
+  background-color: #414f5a;
+  font-size: 15px;
+  color: #e8e8e8;
+  font-family: 'Biryani';
+}
+
+
+::ng-deep .ant-table-middle .ant-table-thead > tr > th{
+
+  color: #1b1c1c;
+  background-color: #FFFFFF;
+ }
+
+
+
+ ::ng-deep .ant-drawer-header {
+  background-color: #414f5a;
+  font-size: 20px;
+
+}
+
+
+::ng-deep .ant-table-middle .ant-table-tbody > tr > td{
+ font-family: 'Biryani';
+
+}
+
+
+ ::ng-deep .ant-modal-title {
+   padding-left: 280px;
+ }
+
+ ::ng-deep .ant-drawer-title {
+   position: inherit;
+   left: 30%;
+   color: #FFFFFF;
+   font-weight: bold;
+   font-family: 'Biryani';
+ }
+
+
+.input-data {
+   width: 150px;
+ } 
+
+
+ a.disabled {
+   color: gray;
+   cursor: not-allowed;
+   text-decoration: underline;
+ }
+
+
+ .drop {
+   position: relative;
+   left: -20px;
+ }
+
+ 
+ .table-data {
+   font-family: 'Biryani';
+   font-size: 15px;
+   color: #414f5a;
+ }
+
+
+
+ .rooms-table-header {
+   background-color: #657786;
+   font-family: 'Biryani';
+   font-size: 15px;
+   color: #e8e8e8;
+ }
+
+
+ .inner-table {
+   position: relative;
+   right: -20%;
+   width: 720px;
+   background-color: #FFFFFF;
+
+ }
+
+
+  .inner-table-header {
+   background-color: #657786  !important;
+   font-family: 'Biryani' !important;
+   font-size: 25px !important;
+   color: #e8e8e8  !important;
+   width: 100%  !important;
+   min-width: 100%  !important;
+   border-radius: 5px !important;
+   position: relative !important;
+   left: -2.5% !important;
+
+ } 
+ 
+ 
+ .add-room-table{
+   position: relative;
+   left: 55%;
+
+ }
+
+ .edit-btn {
+   margin-right: 7px;
+   background-color: #FEFCFC;
+   color: #00aaff;
+   font-family: 'Biryani';
+   font-size: 15px;
+
+ }
+
+ .delete-button {
+   margin-right: 7px;
+   background-color: #FEFCFC;
+   color: #a8071a;
+   font-family: 'Biryani';
+   font-size: 15px;
+ }
+
+
+ .save-btn {
+   background-color: #FEFCFC;
+   color: #00aaff;
+   font-family: 'Biryani';
+   font-size: 15px;
+   position: relative;
+   width: 80px;
+ }
+
+
+
+ .cancel-btn {
+   background-color: #FEFCFC;
+   color: #00aaff;
+   font-family: 'Biryani';
+   font-size: 15px;
+   width: 80px;
+   bottom: -30px;
+ }
+
+ .cancel-room-button {
+   background-color: #FEFCFC;
+   color: #00aaff;
+   font-family: 'Biryani';
+   font-size: 15px;
+   width: 80px;
+   bottom: -60px;
+   left: -79px;
+ }
+
+ #edit-btn:hover {
+   background-color: #00aaff;
+   color: #FFFFFF;
+
+ }
+
+ #cancel-button:hover {
+   background-color: #00aaff;
+   color: #FFFFFF;
+ }
+
+
+ #delete-button:hover {
+   background-color: #a8071a;
+   color: #FFFFFF;
+
+ }
+
+ #save-btn:hover {
+   background-color: #00aaff;
+   color: #FFFFFF;
+ }
+
+
+
+ .delete-btn-div {
+   bottom: -35px;
+ }
+
+
+ .edit-cell {
+   height: 100px;
+ }
+
+ .errors-div {
+   padding-bottom: 1px;
+   float: left;
+   clear: left;
+ }
+
+
+ .reloadIcon {
+   position: relative;
+   background-color: #414f5a;
+   width: 10px;
+ }
+
+
+
+  .example-input .ant-input {
+        width: 100px;
+        margin: 0 8px 8px 0;
+      }

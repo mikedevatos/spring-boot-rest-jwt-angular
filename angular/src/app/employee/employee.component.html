@@ -1,0 +1,295 @@
+<nz-table #employeeTable [nzBordered]="false" [nzData]="employees" [nzPageSize]="10"
+  (nzQueryParams)="onQueryParamsChange($event)" [nzFrontPagination]="false" [nzPageSize]="pageSize"
+  [nzLoading]="loading" [nzTotal]="total" (nzPageIndexChange)="getCurrentPage($event)" [nzLoading]="loading">
+  <thead>
+    <tr>
+      <th nzWidth="2px">
+        <a nz-dropdown [nzDropdownMenu]="menu">
+          <i nz-icon nzType="menu-fold"></i>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul class="drop" nz-menu nzSelectable>
+            <ng-container> </ng-container>
+            <li nz-menu-item routerLink="/customers">Customers</li>
+            <li nz-menu-item (click)="logout()">Logout</li>
+
+          </ul>
+        </nz-dropdown-menu>
+      </th>
+      <th>Id</th>
+      <th>Username</th>
+      <th>Password</th>
+      <th>Firstname</th>
+      <th>LastName</th>
+      <th class="reloadIcon">
+        <div>
+          <a>
+            <i nz-icon nzType="reload" nzTheme="outline" nzOutline="#eb2f96" (click)="ngOnInit()"></i>
+          </a>
+        </div>
+      </th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <ng-template ngFor let-data [ngForOf]="employeeTable.data">
+      <tr>
+        <td></td>
+        <td>
+          {{ data.id }}
+        </td>
+
+        <td class="table-data">
+          <ng-container *ngIf="!data.edit; else usernameInputTempl">
+            {{ data.username}}
+          </ng-container>
+          <ng-template #usernameInputTempl>
+            <nz-input-group>
+              <div>
+                <input type="text" class="input-data" [formControl]="formUsername.get(data.id)" nz-input
+                  placeholder="username" [ngModel]="editMap.get(data.id).username"
+                  (ngModelChange)="setMapUsername(data.id,$event)" />
+                <div class="errors-div" nz-text nzType="danger" style="color:red"
+                  *ngIf="formUsername.get(data.id).invalid">
+                  minimum 4
+
+                </div>
+              </div>
+            </nz-input-group>
+          </ng-template>
+
+        </td>
+
+        <td class="table-data">
+          <ng-container *ngIf="!data.edit; else passwordInputTpl">
+            &bull; &bull; &bull; &bull; &bull;
+          </ng-container>
+
+          <ng-template #passwordInputTpl>
+            <div class="password-div">
+
+              &bull; &bull; &bull; &bull; &bull;
+
+
+              <div class="new-password">
+                <li nz-icon nzType="edit" nzTheme="twotone" nz-tooltip nzTooltipTitle="Add new password"
+                  (click)="openModal(data.id)"> </li>
+              </div>
+
+            </div>
+          </ng-template>
+        </td>
+
+        <td class="table-data">
+          <ng-container *ngIf="!data.edit; else firstNameInputTempl">
+            {{ data.firstName}}
+          </ng-container>
+          <ng-template #firstNameInputTempl>
+            <nz-input-group>
+              <div>
+                <input type="text" class="input-data" [formControl]="formFirstName.get(data.id)" nz-input
+                  placeholder="firstname" [ngModel]="editMap.get(data.id).firstName"
+                  (ngModelChange)="setMapFirstName(data.id,$event)" />
+                <div class="errors-div" nz-text nzType="danger" style="color:red"
+                  *ngIf="formFirstName.get(data.id).invalid">
+                  minimum 4
+
+                </div>
+              </div>
+            </nz-input-group>
+          </ng-template>
+
+        </td>
+
+        <td class="table-data">
+          <ng-container *ngIf="!data.edit; else lastNameInputTpl">
+            {{ data.lastName }}
+          </ng-container>
+
+          <ng-template #lastNameInputTpl>
+            <nz-input-group>
+              <div>
+                <input type="text" [formControl]="formLastName.get(data.id)" class="input-data" placeholder="lastname"
+                  nz-input [ngModel]="editMap.get(data.id).lastName"
+                  (ngModelChange)="setMapLastName(data.id, $event)" />
+
+                <div class="errors-div" nz-text nzType="danger" style="color:red"
+                  *ngIf="formLastName.get(data.id).invalid">
+                  minimum 4
+
+                </div>
+              </div>
+            </nz-input-group>
+          </ng-template>
+        </td>
+
+        <td> </td>
+
+
+
+        <td>
+          <ng-container *ngIf="!data.edit; else saveTpl">
+            <a (click)="startEdit(data.id)" id="edit-btn" class="edit-btn" nz-button nzType="primary">Edit</a>
+          </ng-container>
+          <ng-template #saveTpl>
+            <div class="edit-cell">
+              <button *ngIf="formUsername.get(data.id).invalid ||
+                  formLastName.get(data.id).invalid ||
+                  formUsername.get(data.id).invalid" id="GhostButton" nz-button nzType="primary" disabled
+                class="save-btn">Save</button>
+
+              <button *ngIf="!formUsername.get(data.id).invalid &&
+                             !formFirstName.get(data.id).invalid &&
+                             !formLastName.get(data.id).invalid" id="save-btn" nz-button nzType="primary"
+                (click)="updateEmployee(data.id)" class="save-btn">Save</button>
+
+              <button nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)"
+                id="cancel-button" nz-button nzType="primary" class="cancel-btn">
+                Cancel
+              </button>
+            </div>
+          </ng-template>
+        </td>
+
+        <td>
+
+          <div nz-col nzSpan="50" [ngClass]="{ 'delete-btn-div': data.edit}">
+            <button nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="deleteEmployee(data.id)" nz-button
+              nzType="danger" id="delete-button" class="delete-button">Delete</button>
+
+          </div>
+        </td>
+
+
+      </tr>
+    </ng-template>
+    <ng-container *ngIf="!addEmpRecord; else addTpl">
+      <button nz-button (click)="startAddingEmployee()" nzType="primary">Add</button>
+    </ng-container>
+    <ng-template #addTpl> </ng-template>
+  </tbody>
+</nz-table>
+
+
+<nz-drawer *ngIf="addEmpRecord"
+  [nzBodyStyle]="{ height: 'calc(100%- 55px)', overflow: 'auto','padding-bottom': '20px' }" [nzMaskClosable]="false"
+  nzWidth="100%" nzHeight="100%" [nzVisible]="visibleDrawer" nzTitle="Add Employee" (nzOnClose)="cancelAddEmployee()"
+  nzPlacement="top">
+  <div class="add-custo-flex-div">
+    <div class="add-custo-flex-1">
+
+      <h3> Username </h3>
+
+      <nz-input-group>
+        <div nz-col nzSpan="70">
+          <input type="text" class="input-data" [formControl]="formUsername.get(addEmployeeId)" nz-input
+            placeholder="username" nzSize="large" [ngModel]="editMap.get(addEmployeeId).username"
+            (ngModelChange)="setMapUsername(addEmployeeId,$event)" />
+          <div class="errors-div" nz-text nzType="danger" style="color:red" *ngIf="formUsername.get(addEmployeeId).invalid &&
+                (formUsername.get(addEmployeeId).dirty || formUsername.get(addEmployeeId).touched)">
+            minimum 4
+          </div>
+
+        </div>
+      </nz-input-group>
+
+    </div>
+
+
+    <div class="add-custo-flex-2">
+
+      <h3> Password </h3>
+
+
+      <nz-input-group>
+        <div nz-col nzSpan="70">
+          <input type="text" nz-input class="input-data" [formControl]="formPassword.get(addEmployeeId)"
+            [ngModel]="editMap.get(addEmployeeId).password" nzSize="large" placeholder="lastname"
+            (ngModelChange)="setMapPassword(addEmployeeId,$event)" />
+          <div class="errorsDiv" nz-text nzType="danger" style="color:red" *ngIf="formPassword.get(addEmployeeId).invalid && 
+           (formPassword.get(addEmployeeId).dirty || formPassword.get(addEmployeeId).touched)">
+            minimum 4
+          </div>
+        </div>
+      </nz-input-group>
+    </div>
+
+
+    <div class="add-custo-flex-3">
+      <h3> Firstname </h3>
+
+
+      <nz-input-group>
+        <div nz-col nzSpan="70">
+          <input type="text" [formControl]="formFirstName.get(addEmployeeId)" class="input-data" placeholder="bill"
+            nz-input [ngModel]="editMap.get(addEmployeeId).firstName" nzSize="large"
+            (ngModelChange)="setMapFirstName(addEmployeeId,$event)" />
+
+          <div class="errorsDiv" nz-text nzType="danger" style="color:red" *ngIf="(formFirstName.get(addEmployeeId).invalid)
+             &&(formFirstName.get(addEmployeeId).dirty || formFirstName.get(addEmployeeId).touched)">
+            minimum 1
+          </div>
+
+        </div>
+      </nz-input-group>
+    </div>
+
+    <div class="add-custo-flex-4">
+      <h3> Lastname </h3>
+
+      <nz-input-group>
+        <div nz-col nzSpan="70">
+          <input type="text" [formControl]="formLastName.get(addEmployeeId)" name="emailInput" placeholder="email"
+            nz-input nzSize="large" class="input-data" [ngModel]="editMap.get(addEmployeeId).lastName"
+            (ngModelChange)="setMapLastName(addEmployeeId,$event)" />
+
+          <div class="errorsDiv" style="color:red" *ngIf="formLastName.get(addEmployeeId).invalid && 
+          (formLastName.get(addEmployeeId).dirty || formLastName.get(addEmployeeId).touched)" nz-text nzType="danger">
+            minimum 4
+          </div>
+
+        </div>
+      </nz-input-group>
+
+    </div>
+
+
+    <div class="add-custo-flex-5">
+      <div class="add-button">
+
+        <button nz-button nzType="primary" (click)="addEmployee(addEmployeeId)">Save</button>
+
+      </div>
+    </div>
+  </div>
+
+
+</nz-drawer>
+
+<nz-modal *ngIf="iSPasswordModalVisible" [(nzVisible)]="iSPasswordModalVisible" [nzTitle]="TitleModalTml"
+  (nzOnCancel)="closeModal()" (nzOnOk)="updateEmployee(updatedPasswordId)">
+
+  <nz-input-group>
+    <div class="new-password-input">
+      <input type="text" class="input-data" nz-input [formControl]="formPassword.get(updatedPasswordId)"
+        placeholder="firstname" [ngModel]="editMap.get(updatedPasswordId).password"
+        (ngModelChange)="setMapPassword(updatedPasswordId,$event)" />
+      <div class="errors-div" nz-text nzType="danger" style="color:red"
+        *ngIf="formPassword.get(updatedPasswordId).invalid">
+        minimum 4
+
+      </div>
+    </div>
+
+  </nz-input-group>
+
+  <ng-template #TitleModalTml>
+
+
+    <h3 class="title-modal-tbl"> Add New Employee Password</h3>
+
+  </ng-template>
+
+</nz-modal>
