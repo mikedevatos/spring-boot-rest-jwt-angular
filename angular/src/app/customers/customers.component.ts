@@ -94,7 +94,7 @@ export class CustomersComponent implements OnInit {
       this.userManagerAuth = true;
     }
     this.loading = true;
-    this.pageSize = 3;
+    this.pageSize = 5;
     this.selectedSingleRoomId = [];
     this.selectedMultipleRoomId = [];
     this.isLoading = false;

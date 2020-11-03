@@ -76,20 +76,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js",
-                        "/*.js").permitAll()
+                        "/*.js,").permitAll()
 
                 .antMatchers( "/h2-console/**").permitAll()
 
                 .antMatchers(HttpMethod.GET,"/api/userinfo").permitAll()
 
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
 
                 .antMatchers(HttpMethod.GET,"/api/room").hasAnyRole("MANAGER","EMPLOYEE")
 
-                .antMatchers("/api/customer/*/*").hasAnyRole("EMPLOYEE","MANAGER")
+                .antMatchers("/api/customer").hasAnyRole("EMPLOYEE","MANAGER")
+
+                .antMatchers(HttpMethod.GET,"/api/customer/?/?").hasAnyRole("EMPLOYEE","MANAGER")
+
+                .antMatchers("/api/employee").hasRole("MANAGER")
 
 
-                .antMatchers("/api/employee/**/*").hasRole("MANAGER")
+                .antMatchers(HttpMethod.GET,"/api/employee/?/?").hasRole("MANAGER")
+
+
+
 
                 .antMatchers(HttpMethod.GET, "/v2/**").access("hasIpAddress('127.0.0.0/8') or hasIpAddress('::1')")
                 .antMatchers( "/swagger-ui.html/**").access("hasIpAddress('127.0.0.0/8') or hasIpAddress('::1')")
