@@ -76,7 +76,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js",
-                        "/*.js,").permitAll()
+                        "/*.js").permitAll()
 
                 .antMatchers( "/h2-console/**").permitAll()
 
