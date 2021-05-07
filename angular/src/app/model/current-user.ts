@@ -1,5 +1,5 @@
-export class CurrentUser {
-    public username?: any;
-    public role: any;
+export interface CurrentUser {
+     username?: any;
+     role: any;
 
 }

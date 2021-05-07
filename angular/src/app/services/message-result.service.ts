@@ -14,7 +14,6 @@ export class MessageResultService {
       nzTitle: 'This is a notification message',
       nzContent: message
     });
-
     setTimeout(() => modal.destroy(), 3000);
   }
 
@@ -28,6 +27,8 @@ export class MessageResultService {
     setTimeout(() => modal.destroy(), 3000);
 
    }
+
+
 
 
 }

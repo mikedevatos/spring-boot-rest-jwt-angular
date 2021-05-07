@@ -1,0 +1,15 @@
+<div class="booking-dates-container">
+
+    <h3> Select Booking Dates </h3>
+
+     <div>
+       <nz-date-picker [(ngModel)]="dateStart" [nzFormat]="dateFormat"
+         [nzShowTime]="false" nzPlaceHolder="Start" (ngModelChange)="onChangeStartDate($event)"> </nz-date-picker>
+       </div>
+
+      <div>
+       <nz-date-picker [(ngModel)]="dateEnd" [nzFormat]="dateFormat"  [nzShowTime]="false"
+         nzPlaceHolder="End" (ngModelChange)="onChangeEndDate($event)"></nz-date-picker>
+       </div>
+
+</div>

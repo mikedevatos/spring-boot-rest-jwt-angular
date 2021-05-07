@@ -6,11 +6,8 @@ import {  Subject } from 'rxjs';
 })
 export class popConfirmHandleCancelService {
 
-
   public confirmSource = new Subject<boolean>();
   confirm = this.confirmSource.asObservable(); 
-
-
 
   popUpDialog(data: boolean){
    this.confirmSource.next(data);

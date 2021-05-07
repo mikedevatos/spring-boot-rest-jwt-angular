@@ -1,12 +1,12 @@
 package com.hotels.example.security;
 
 import com.google.gson.Gson;
-import com.hotels.example.model.LoginUser;
-
+import com.hotels.example.dto.LoginUser;
 
 import com.hotels.example.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,10 +27,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-
 public class AuthenticationJwtFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
+    @Autowired
     public AuthenticationJwtFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
         setFilterProcessesUrl("/api/login");
@@ -62,28 +62,19 @@ public class AuthenticationJwtFilter extends UsernamePasswordAuthenticationFilte
     }
 
 
-
-
    // authenticate login request
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         LoginUser login = null;
         try {
-
           login = getLoginRequest(request);
 
-
-      UsernamePasswordAuthenticationToken authenticationToken =
-              new UsernamePasswordAuthenticationToken(login.getUsername(),
-                                                      login.getPassword(),
-                                                      new ArrayList<>()  );
-
-
+         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(login.getUsername(),
+                                                                                                           login.getPassword(),
+                                                                                                           new ArrayList<>()  );
 
             Authentication auth = authenticationManager.authenticate(authenticationToken);
-
-
             return auth;
         }
         catch(AuthenticationException e){
@@ -95,9 +86,6 @@ public class AuthenticationJwtFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-
-
-
         User principal = (User) authResult.getPrincipal();
 
 
@@ -107,10 +95,6 @@ public class AuthenticationJwtFilter extends UsernamePasswordAuthenticationFilte
                     .setSubject(principal.getUsername())
                     .signWith(SignatureAlgorithm.HS256, JwtTokenSource.key.getBytes())
                     .compact();
-
-
-
-
 
         //send bearer_token
         response.addHeader(JwtTokenSource.header, JwtTokenSource._prefix +token);

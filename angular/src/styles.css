@@ -1,1 +1,138 @@
-/* You can add global styles to this file, and also import other style files */
+
+#save-btn {
+  background-color: #fefcfc;
+  color:#28343a;
+  font-family: "Biryani";
+  font-size: 13px;
+  border-radius: 1px;
+  border-color: #28343a;
+  width: 80px;
+}
+
+  #cancel-button {
+    background-color: #fefcfc;
+    color:#28343a;
+    font-family: "Biryani";
+    border-radius: 3px;
+    border-color: #28343a;
+    width: 80px;
+    bottom: -30px;
+    height: 35px;
+    font-size: 13px;
+  }
+
+
+  #add-btn:hover{
+    color: #00aaff;
+  }
+
+
+  #add-btn{
+    color: #fefcfc;
+    background-color: #28343a ;
+    font-family: "Biryani";
+    border-radius: 3px;
+    border-color: #28343a;
+    width: 80px;
+    bottom: -30px;
+    height: 35px;
+    font-size: 13px;
+    left:1px
+  }
+
+
+  #cancel-button:hover {
+    color: #00aaff;
+    background-color: #28343a ;
+  }
+
+
+  #save-btn:hover {
+    color: #00aaff;
+    background-color: #28343a ;
+  }
+
+  #table-data {
+    font-family: 'Biryani';
+    font-size: 15px;
+    color: #414f5a;
+  }
+
+#delete-button{
+  background-color: #fefcfc;
+  color:#28343a;
+  font-family: "Biryani";
+  font-size: 14px;
+  border-radius: 3px;
+  border-color: #28343a;
+  width: 80px;
+}
+
+
+#delete-button:hover {
+  color: #f44336;
+  background-color: #28343a ;
+}
+
+
+#edit-btn {
+  background-color: #fefcfc;
+  color:#28343a;
+  font-family: "Biryani";
+  font-size: 12px;
+  border-radius: 3px;
+  border-color: #28343a;
+}
+
+#edit-btn:hover {
+  color: #00aaff;
+  background-color: #28343a ;
+}
+
+
+#errors-div {
+  padding-bottom: 1px;
+  float: left;
+  clear: left;
+  color: #a8071a;
+}
+
+
+#drop{
+  position: relative;
+  left: -20px;
+ }
+
+
+  .ant-table-thead > tr > th {
+  background-color: #1c252e !important;
+  font-size: 15px !important;
+  color: #e8e8e8 !important;
+  font-family: "Biryani" !important ;
+}
+
+.ant-table-small{
+  width: 350px !important;
+}
+
+
+ .ant-table-tbody > tr > td {
+  font-family: "Biryani" !important;
+  font-size: 15px !important;
+  color: #414f5a !important;
+ }
+
+
+.ant-table{
+  line-height: 0.5 !important;
+}
+
+
+ .ant-table-middle .ant-table-tbody > tr > td {
+  font-family: "Biryani" !important;
+}
+
+
+ .ant-table-middle .ant-table-tbody > tr > td{
+  font-family: 'Biryani' !important;
+ }

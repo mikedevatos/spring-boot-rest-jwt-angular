@@ -3,36 +3,34 @@ package com.hotels.example.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.*;
 
 @Entity
 @Table(name="users")
+//@Setter
 public class User implements UserDetails {
-
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private Long id;
+    private Integer id;
 
 
     @JsonIgnore
-
-    @ManyToMany(cascade ={CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.EAGER)
-    @JoinTable(
-            name="user_roles",
-            joinColumns={@JoinColumn(name="user_id",referencedColumnName = "id")},
-            inverseJoinColumns={@JoinColumn(name="roles_id",referencedColumnName = "id")}
-    )
-    private Set<Roles> roles = new HashSet<>();
+    @ManyToOne(cascade ={CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinColumn(name = "roles_id")
+    private Roles role;
 
     @Column(name="username", unique = true  ,nullable = false)
     @Size(min=4,max = 64)
@@ -51,17 +49,17 @@ public class User implements UserDetails {
     private String lastName;
 
     @JsonIgnoreProperties("users")
-    public Set<Roles> getRoles() {
-        return roles;
+    public Roles getRole() {
+        return role;
     }
 
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -93,8 +91,8 @@ public class User implements UserDetails {
     }
 
 
-    public void setRoles(Set<Roles> roles) {
-        this.roles = roles;
+    public void setRoles(Roles role) {
+        this.role = role;
     }
 
 
@@ -104,10 +102,8 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        this.getRoles().forEach(r -> {
-            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+r.getType_role());
+            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+ this.getRole().getType_role());
             authorities.add(authority);
-        });
 
         return authorities;
     }
@@ -149,7 +145,6 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     @Transient
-
     public boolean isEnabled() {
         this.setActive();
         return this.getActive() == 1;

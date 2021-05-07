@@ -7,9 +7,7 @@ export class SaveUserAuthService implements OnInit  {
 
    userAuth: any;
 
-
   constructor() {
-
 
   }
   ngOnInit(): void {

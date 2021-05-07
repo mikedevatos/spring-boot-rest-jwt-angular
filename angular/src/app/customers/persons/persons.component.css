@@ -1,0 +1,62 @@
+
+  .modal-edit-person{
+    position: absolute;
+    left: 80%;
+  }
+
+  .modal-edit-person h3 {
+    padding: 5px;
+  }
+
+
+  .expand-table-persons {
+    position: relative;
+    width: 380px;
+    background-color: #ffffff;
+    left:20px;
+  }
+
+
+
+  .expand-table-persons-header {
+    background-color: #28343a !important;
+   color: #adb8c2;
+   font-family: "Biryani" !important;
+   font-size: 18px !important;
+   color: #e8e8e8 !important;
+   width: 30% !important;
+   min-width: 30% !important;
+   position: relative !important;
+   height: 40px;
+   top: -10px;
+   border-radius: 3px;
+ }
+
+  .add-button{
+    color: #fefcfc;
+    background-color: #28343a ;
+    font-family: "Biryani";
+    border-radius: 3px;
+    border-color: #28343a;
+    width: 80px;
+    bottom: 0px  !important;
+    height: 35px;
+    font-size: 13px;
+    left:1px
+  }
+
+
+.data-th{
+  background-color: #ffffff !important;
+  font-family: "Biryani" !important;
+  font-size: 14px !important;
+  color: #414f5a !important;
+  font-weight: 600;
+  opacity: 90%;
+}
+
+
+  .person-edit-input {
+    width: 250px;
+    margin: 0 8px 8px 0;
+  }

@@ -1,0 +1,93 @@
+
+  .add-room {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    position: relative;
+    align-content: center;
+    width: 250px;
+    right:15px;
+  }
+
+
+  .add-room h4{
+    position: relative;
+    align-self: center;
+    right: 15px;
+    top:15px;
+  }
+
+  .room-container{
+    display:flex;
+    flex-direction: column;
+    position: absolute;
+    left: 20%;
+    top: 45%;
+    width: 210px;
+    height: 350px;
+  }
+
+
+  .room-container h3{
+    position: relative;
+    align-self: center;
+    left:25%;
+  }
+
+
+  .select-container{
+    display: flex;
+    align-items: center;
+    position: relative;
+    color: black;
+    width: 200px;
+    flex-direction: column;
+  }
+
+  .select-container h4{
+    position: relative;
+    top:20px;
+  }
+
+.select-room{
+  width: 250px;
+}
+
+
+.add-select-room {
+    border: 2px solid #ebeff2;
+    border-radius: 5px;
+    padding: 20px 0px;
+    margin: 37px 20px 0;
+    font-size: 12px;
+    color: #2292a7;
+    font-weight: 600;
+    overflow: auto;
+    width: 250px;
+    top:-65px;
+    position: relative;
+    right: 30px;
+  }
+
+  .add-select-room div {
+    float: left;
+    width: 50%;
+    text-align: center;
+    position: relative;
+  }
+
+  .add-select-room strong {
+    display: block;
+    color: #adb8c2;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .add-select-room span {
+    width: 2px;
+    height: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #ebeff2;
+  }

@@ -1,0 +1,143 @@
+@media only screen and (max-width: 700px){
+
+  .add-persons-container {
+    position: relative;
+    left: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    top:40px;
+  }
+
+  .edit-person-inactive{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    opacity: 0.4;
+    right:60px;
+  }
+
+  .edit-person{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    right:60px;
+  }
+
+  .person-edit-input {
+    width: 180px;
+    margin: 0 8px 8px 0;
+    border-radius: 4px;
+  }
+
+}
+
+
+.errors-div {
+  position: relative;
+  float: left;
+  clear: left;
+  color: #a8071a;
+  bottom: -5px;
+
+}
+
+
+.edit-person h3 {
+  padding: 5px;
+  position:relative;
+  left: 80px;
+  font-size: 15px;
+  color: #37474f;
+}
+
+
+.add-persons-container {
+  position: relative;
+  left: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  top:40px;
+
+}
+
+.person-edit-input {
+  width: 250px;
+  margin: 0 8px 8px 0;
+  border-radius: 4px;
+}
+
+.edit-person{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  right:50px
+}
+
+.edit-person-inactive{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  pointer-events: none;
+  opacity: 0.4;
+  right:40px;
+}
+
+.input-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.add-person-btn-container{
+  position: relative;
+  order: 4;
+  left: 50px;
+  width: 180px;
+  font-size: 12px;
+  border-color: #1890ff;
+  border-radius: 3px;
+  top: 10px;
+}
+
+.add-person-btn-container div{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#add-person-btn:hover {
+  color: #fefcfc;
+  background-color: #28343a ;
+  border-color: #28343a;
+}
+
+
+.person-list-container {
+  position: relative;
+  right: 80px;
+  width: 320px;
+  top:20px;
+}
+
+
+.person-list-header {
+  color: rgb(10, 10, 10);
+  font-size: 15px;
+  position: relative;
+  left: 40%;
+  height: 5px;
+}
+
+.list-header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+
+

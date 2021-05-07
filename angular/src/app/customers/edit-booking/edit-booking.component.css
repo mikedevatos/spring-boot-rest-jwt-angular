@@ -1,0 +1,56 @@
+
+.edit-start-date {
+  position: absolute;
+  left: 55%;
+  top: 20%;
+}
+
+.edit-end-date {
+  position: absolute;
+  left: 55%;
+  top: 43%;
+}
+
+
+.edit-booking-header{
+  position: absolute;
+  left:30%;
+  white-space: nowrap;
+}
+
+
+@media only screen and (min-width: 1280px){
+
+.calendar-container{
+  position: relative;
+  right: 100px;
+  display:flex;
+  flex-direction:row;
+  justify-content: space-around;
+  flex-wrap: nowrap;
+  width: 260px;
+}
+
+.edit-bookings-icon{
+   order:4;
+   transform: scale(1.5);
+ }
+
+}
+
+.booking-container{
+position: relative;
+right: 20px;
+display:flex;
+flex-direction:row;
+justify-content: space-around;
+flex-wrap: nowrap;
+width: 260px;
+top: 5px;
+}
+
+
+.edit-bookings-icon{
+order:4;
+transform: scale(1.2);
+}

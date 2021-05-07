@@ -1,0 +1,58 @@
+
+
+ <div class="booking-container">
+
+  <i nz-icon [nzType]="'calendar'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#536dfe'">
+    {{ booking.startBooking }}
+  </i>
+
+  <i nz-icon  nzType="arrow-right" nzTheme="outline"></i>
+
+  <i nz-icon class="edit-bookings-icon" nzType="edit" nzTheme="twotone"
+    (click)="startEditBookings(roomId,booking)"></i>
+
+
+  <i
+      nz-icon
+      [nzType]="'calendar'"
+      [nzTheme]="'twotone'"
+      [nzTwotoneColor]="'#009688'">
+      {{ booking.endBooking }}
+  </i>
+
+</div>
+
+
+  <nz-modal [(nzVisible)]="isVisibleEditingBookings" [nzTitle]="headerEditBookingTempl" nzClosable="true"
+  (nzOnCancel)="destroyModalEditingBookings()" [nzStyle]="{ width: '40%' }" [nzBodyStyle]="{
+    height: '250px',
+    position: 'relative',
+    right: '50%',
+    bottom: '0px'
+  }" [nzContent]="editDateTmpl" [nzFooter]="tplFooterSave">
+  <ng-template #editDateTmpl>
+    <div class="edit-start-date">
+      <nz-date-picker [(ngModel)]="dateStart" [nzDefaultPickerValue]="bookingEdit.startBooking | date"
+        [nzFormat]="dateFormat" [nzDisabledDate]="disabledDate" [nzShowTime]="false" nzPlaceHolder="edit start"
+        (ngModelChange)="onChangeStartDate($event)">
+      </nz-date-picker>
+    </div>
+
+    <div class="edit-end-date">
+      <nz-date-picker [nzDisabledDate]="disabledDate" [nzDefaultPickerValue]="bookingEdit.endBooking | date"
+        [(ngModel)]="dateEnd" [nzFormat]="dateFormat" [nzShowTime]="false" nzPlaceHolder="edit end"
+        (ngModelChange)="onChangeEndDate($event)">
+      </nz-date-picker>
+    </div>
+  </ng-template>
+
+  <ng-template #tplFooterSave>
+    <button nz-button id="save-btn" nzType="primary" (click)="saveEditingBookingDates()">
+      save
+    </button>
+  </ng-template>
+
+  <ng-template #headerEditBookingTempl>
+    <h3 class="edit-booking-header">Edit Booking</h3>
+  </ng-template>
+</nz-modal>

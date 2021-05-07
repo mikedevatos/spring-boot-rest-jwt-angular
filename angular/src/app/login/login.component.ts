@@ -15,7 +15,6 @@ export class LoginComponent implements OnInit {
   errorMessage: boolean;
 
 
-
   constructor(
               private router: Router,
               private fb: FormBuilder,
@@ -25,7 +24,6 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     this.validateForm = this.fb.group({
       username: [null, [Validators.required]],
       password: [null, [Validators.required]]
@@ -34,7 +32,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
@@ -43,27 +40,19 @@ export class LoginComponent implements OnInit {
     this.password = this.validateForm.get('password').value;
 
     this.httpService.login(this.username, this.password)
-
     .subscribe(res => {
       console.log('response is' + res.status);
-
     },
     err => {
       console.log(err);
       this.errorMessage = true;
       localStorage.setItem('bearerToken', '');
 
-    }
-    ,
-
+    },
     () => {
-
       this.router.navigate(['']);
-
     }
-
     );
-
 
 }
 

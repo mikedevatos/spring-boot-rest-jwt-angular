@@ -1,0 +1,50 @@
+
+<ng-container  *ngIf="isAddRoomVisible" >
+
+<div class="room-container">
+
+  <div> <h3>add Room</h3> </div>
+
+   <div>
+
+     <div class="select-container">
+
+      <h4>Id</h4>
+
+      <nz-divider></nz-divider>
+
+      <!-- select rooms -->
+      <div class="select-room">
+        <nz-select nzPlaceHolder="select room" [nzOptions]="roomsList" nzSize="large" [ngModel]="selectedRoomId"
+          (ngModelChange)="dropdownSelectAddRoom($event)">
+        </nz-select>
+      </div>
+    </div>
+  </div>
+
+    <!-- show selected room -->
+    <div>
+
+    <div class="add-room">
+
+      <h4>Rooms</h4>
+
+      <nz-divider></nz-divider>
+
+      <div class="add-select-room">
+        <div>
+          <strong>ID</strong>
+          {{addRoom.id}}
+          <span></span>
+        </div>
+        <div>
+          <strong>PRICE</strong>
+          {{addRoom.price}}
+        </div>
+      </div>
+
+    </div>
+
+   </div>
+  </div>
+</ng-container>

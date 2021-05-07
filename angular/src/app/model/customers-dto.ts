@@ -1,6 +1,6 @@
-import { CustomerModel } from './customer-model';
+import { Customer } from './customer';
 
-export class CustomersDTO {
-    public    customer: CustomerModel[];
-    public  count: number;
+export interface CustomersDTO {
+        customer: Customer[];
+        count: number;
 }

@@ -21,24 +21,20 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.token = localStorage.getItem('bearerToken');
-        console.log('token is'   + this.token);
+        console.log('token is :'   + this.token);
 
-        if ( !(isUndefined(this.token) )){
+        if (  !(isUndefined(this.token) )  ){
 
-         this.httpService.getUserInfo().subscribe(data => {
+             this.httpService.getUserInfo().subscribe(data => {
+
              this.state.userAuth = data.role;
-
-
           },
           error => {
               console.log(error);
               this.router.navigate(['login']);
-
-
           },
           () => {
               this.router.navigate(['customers']);
-
           }
           );
 

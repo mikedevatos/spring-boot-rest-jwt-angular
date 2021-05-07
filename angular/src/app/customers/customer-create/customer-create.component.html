@@ -1,0 +1,142 @@
+
+<button nz-button id="add-btn" (click)="startAddingCustomer()" nzType="primary">Add</button>
+
+<nz-drawer *ngIf="addCustomerRecord"
+[nzBodyStyle]="{   overflow: 'auto','padding-top': '20px' }" [nzMaskClosable]="false"
+nzWidth="100%" nzHeight="100%" [nzVisible]="isVisibleAddCustomer" [nzTitle]="drawerTitleTempl" (nzOnClose)="cancelAddCustomer()"
+nzPlacement="top">
+
+
+<ng-template  #drawerTitleTempl>
+  <h3 class="drawer-title-templ">Add Customer</h3>
+</ng-template>
+
+<nz-steps [nzCurrent]="current"   [nzDirection]="stepsDirection"  (nzIndexChange)="onStepChange($event)">
+
+  <nz-step nzTitle="Add Person" [nzStatus]="stepStatusMap.get(0)"></nz-step>
+
+  <nz-step nzTitle="Choose Booking" [nzStatus]="stepStatusMap.get(1)" ></nz-step>
+
+  <nz-step nzTitle="Add Room" [nzStatus]="stepStatusMap.get(2)"></nz-step>
+
+  <nz-step nzTitle="Choose Account Type" [nzStatus]="stepStatusMap.get(3)"  ></nz-step>
+
+  <nz-step nzTitle="Finish Save"></nz-step>
+
+</nz-steps>
+
+<!--  add person -->
+<ng-container *ngIf="current===0">
+
+  <app-create-person
+
+  [personsArray]="persons"
+
+  (personValidation)="onChangePersonValidation($event)"
+
+  (emitPersons)="onChangePersons($event)">
+
+  </app-create-person>
+
+</ng-container>
+
+<!--   select booking dates -->
+<ng-container *ngIf="current===1">
+
+  <app-select-booking
+  [start]="startBooking"
+  [end]="endBooking"
+  (emitEndDate)="onChangeEndDate($event)"
+  (emitStartDate)="onChangeStartDate($event)">
+ </app-select-booking>
+
+</ng-container>
+
+<!-- select Room -->
+<ng-container *ngIf="current===2">
+       <app-add-room
+       [room]="addRoom"
+       [dateStart]="startBooking"
+       [dateEnd]="endBooking"
+       (emitRoom)="onRoomChange($event)"
+       ></app-add-room>
+</ng-container>
+
+  <!-- select account -->
+<ng-container *ngIf="current===3">
+
+  <nz-select class="select-account-type" nzShowSearch nzAllowClear  [ngModel]="selectedAccountType"
+  (ngModelChange)="selectAccountTypeOnChange($event);"   nzPlaceHolder="select account type">
+
+    <nz-option *ngFor="let item of listOfItem" [nzLabel]="item" [nzValue]="item"></nz-option>
+
+  </nz-select>
+</ng-container>
+
+
+<div class="steps-action">
+
+  <button  class="previus-btn" id="previus-btn"   nz-button nzType="default" (click)="previus()" *ngIf="current > 0">
+    <span>Previous</span>
+  </button>
+
+
+  <!-- add person step -->
+  <ng-container *ngIf="current===0">
+
+    <ng-container *ngIf="!isPersonValid ; else personValidationTempl">
+
+      <button  class="next-btn"  nz-button nzType="default" disabled  nz-button >
+
+        <span>Next</span>
+
+      </button>
+
+    </ng-container>
+
+    <ng-template   #personValidationTempl >
+
+      <button  id="next-btn" class="next-btn"   nz-button nzType="default" (click)="next()">
+        <span>Next</span>
+      </button>
+
+    </ng-template>
+
+  </ng-container>
+
+
+  <!-- select dates step -->
+  <ng-container  *ngIf="current===1" >
+
+    <button  class="next-btn"  nz-button nzType="default" (click)="next()" >
+      <span  >Next</span>
+  </button>
+
+    <button *ngIf="startBooking.length <= 2" class="next-btn" disabled  nz-button nzType="default" >
+      <span  >Next</span>
+    </button>
+
+  </ng-container>
+
+
+  <!-- select room step -->
+ <button class="next-btn" id="next-btn"  *ngIf="current===2" nz-button nzType="default"   (click)="next()">
+  <span>Next</span>
+</button>
+
+<!-- select account type step -->
+<button class="next-btn"  id="next-btn" *ngIf="current===3" nz-button nzType="default"   (click)="next()">
+  <span>Next</span>
+</button>
+
+
+<!-- finish step -->
+  <button class="next-btn" id="next-btn" nzType="primary" (click)="saveCustomer()" *ngIf="current === 4">
+    <span>Done</span>
+  </button>
+
+ </div>
+
+</nz-drawer>
+
+

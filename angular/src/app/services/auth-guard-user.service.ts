@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import {  } from '../model/current-user';
 import * as isUndefined from 'lodash/isUndefined';
 
-
-
 import {
   CanActivate,
   Router,
@@ -20,68 +18,37 @@ import { HttpRequestsService } from './http-requests.service';
 })
 export class AuthGuardUserService implements CanActivate {
 
+  Userrole: any;
 
- Userrole: any;
-
-
-  constructor(private router: Router
-    ,         private authStateService: SaveUserAuthService
-    ,         private httpService: HttpRequestsService) { }
+  constructor(private router: Router,
+              private authStateService: SaveUserAuthService,
+              private httpService: HttpRequestsService) { }
 
 
  async canActivate(): Promise<boolean | UrlTree>{
   const employee = 'EMPLOYEE';
   const manager = 'MANAGER';
 
-  if (!isUndefined(this.authStateService.userAuth)){
+      if (!isUndefined(this.authStateService.userAuth) )
+           this.Userrole = this.authStateService.userAuth;
 
-          this.Userrole = this.authStateService.userAuth;
+       else if (  isUndefined(this.Userrole)  ) {
 
-       }
-       else if (isUndefined(this.Userrole)){
-
-
-
-        try {
-
-          await  (await this.httpService.getUserInfo().pipe(
-
-               tap(
-                 data =>  {
-
-                this.authStateService.userAuth = data.role;
-               },
-
-               err => {
-                 console.log(err);
-               }
-
+        await    this.httpService.getUserInfo().pipe(
+                 tap(
+                 data =>  {this.authStateService.userAuth = data.role; },
+                 err => {console.log(err)}
+                 )
                )
-
-          )
-          .toPromise()
-
-
-          .catch(err => {console.log(err); }));
-        } catch (e) {
-          console.log(e instanceof HttpErrorResponse); // true
-          throw e;
-        }
-
-
+               .toPromise()
 
         this.Userrole = this.authStateService.userAuth;
-
-
-       }
-  if ((this.Userrole === manager) || (this.Userrole === employee)){
-         return true;
        }
 
-  return this.router.createUrlTree(['/login']);
+      if ( (this.Userrole === manager) || (this.Userrole === employee)  )
+              return true;
 
+     return this.router.createUrlTree(['/login']);
      }
-
-
-    }
+}
 

@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
 import java.util.Optional;
 
 @Service
@@ -19,16 +18,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userRepo = userRepository;
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Optional<User> user = this.userRepo.findByUsername(s);
 
         if (user.isPresent()){
             return user.get();
-        }else{
-
-
+        }
+        else{
             throw new UsernameNotFoundException(String.format("Username not found"));
         }
 

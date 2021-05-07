@@ -1,0 +1,123 @@
+<ng-container *ngIf="isPersonVisible">
+
+  <div class="add-persons-container">
+    <div>
+      <div [ngClass]=" enableAddingForm ? 'edit-person' : 'edit-person-inactive' ">
+
+        <div>
+          <h3>Email</h3>
+
+          <nz-input-group>
+
+            <div class="input-container">
+              <div>
+                <input type="text" name="emailInput" nzSize="large" [formControl]="formEmail.get(addingPerson.id)"
+                  placeholder="email" nz-input class="person-edit-input" [(ngModel)]="addingPerson.email" />
+              </div>
+
+              <div class="errors-div"
+              *ngIf=" formEmail.get(addingPerson.id).invalid && enableAddingForm"
+              >
+                minimum 4
+              </div>
+
+            </div>
+          </nz-input-group>
+        </div>
+
+        <div>
+          <h3>Firstname</h3>
+          <nz-input-group>
+            <div class="input-container">
+              <div>
+                <input type="text" name="firstNameInput" [formControl]="formFirstName.get(addingPerson.id)"
+                  placeholder="firstName" nz-input nzSize="large" class="person-edit-input"
+                  [(ngModel)]="addingPerson.firstName" />
+              </div>
+
+              <div class="errors-div" *ngIf="
+                  formFirstName.get(addingPerson.id).invalid && enableAddingForm">
+                minimum 4
+              </div>
+            </div>
+          </nz-input-group>
+        </div>
+
+        <div>
+          <h3>Lastname</h3>
+          <nz-input-group>
+            <div class="input-container">
+              <div>
+                <input type="text" name="lastNameInput" [formControl]="formLastName.get(addingPerson.id)"
+                  placeholder="lastName" nz-input nzSize="large" class="person-edit-input"
+                  [(ngModel)]="addingPerson.lastName" />
+              </div>
+
+              <div class="errors-div"  *ngIf="
+                  formLastName.get(addingPerson.id).invalid && enableAddingForm">
+                minimum 4
+              </div>
+            </div>
+          </nz-input-group>
+        </div>
+
+        <div class="add-person-btn-container">
+
+          <ng-container *ngIf="enableAddingForm">
+
+            <div class="add-person-btn-container">
+              <button id="add-person-btn" nz-button nzType="default" (click)="addPerson()">
+                Add Person
+              </button>
+              &nbsp; &nbsp; &nbsp;
+              <button *ngIf="personArrayLeng > 0" nz-button nzType="default" (click)="cancelAddPerson()">
+                cancel
+              </button>
+            </div>
+
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="person-list-container">
+
+      <!-- person list -->
+      <ng-container *ngIf="personArrayLeng >= 1">
+        <nz-list nzBordered nzSize="large" [nzHeader]="listHeaderTempl" [nzFooter]="listFooterTempl">
+          <nz-list-header>
+            <div class="list-header">
+              <div>Email</div>
+              <div>Firsname</div>
+              <div>Latname</div>
+
+              <div>
+                <i nz-icon nzType="close" nzTheme="outline"> </i>
+              </div>
+            </div>
+          </nz-list-header>
+
+          <nz-list-item *ngFor="let item of persons">
+            {{ item.email }} &nbsp; &nbsp; &nbsp; &nbsp;
+            {{ item.firstName }} &nbsp; &nbsp; &nbsp; &nbsp; {{ item.lastName }}
+
+            <i nz-icon [nzType]="'close'" style="font-size: 16px; color: #ba000d" (click)="removePerson(item.id)"></i>
+          </nz-list-item>
+        </nz-list>
+
+        <ng-template #listHeaderTempl>
+          <h3 class="person-list-header">Persons</h3>
+        </ng-template>
+
+        <ng-template #listFooterTempl>
+
+          <button *ngIf="!enableAddingForm" nz-button nzType="default" id="add-person-btn"
+            (click)="isVisibleAddingPerson()">
+            New Person
+          </button>
+
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

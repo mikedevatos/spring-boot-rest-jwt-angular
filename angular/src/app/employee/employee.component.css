@@ -1,14 +1,10 @@
-   .drop{
-    position: relative;
-    left: -20px;
-   }
 
    .password-div{
     bottom: -12px;
     position: relative;
     right:3px;
      }
-   
+
 
      .new-password-input{
        left:150px;
@@ -20,64 +16,27 @@
      position: relative;
      left: 77px;
      width: 35px;
-     
+
    }
-  
-    .editable-row-operations a {
-      margin-right: 7px;
-      
-      background-color: #FEFCFC;
-      font-family: 'Biryani';
-      font-size: 15px;
-      color: #00aaff;
-    }
-  
-    
 
-
-     ::ng-deep ant-table-tbody > tr > td{     
-      font-family: 'Biryani';
-      font-size: 15px;
-      color: #414f5a;
-    
-     }
-    
-    
-     ::ng-deep .ant-table-thead>tr>th
-   {
-      background-color: #414f5a;
-      font-size: 15px;
-      color: #e8e8e8;
-      font-family: 'Biryani';
-    }
-    
-    
     ::ng-deep .ant-table-middle .ant-table-thead > tr > th{
-    
       color: #1b1c1c;
       background-color: #FFFFFF;
      }
-    
-    
-    
-     ::ng-deep .ant-drawer-header {
+
+
+     ::ng-deep .ant-drawer-header{
       background-color: #414f5a;
       font-size: 20px;
-    
+
     }
-    
-    
-    ::ng-deep .ant-table-middle .ant-table-tbody > tr > td{
-     font-family: 'Biryani';
-    
-    }
-    
-    
-     ::ng-deep .ant-modal-title {
+
+
+     ::ng-deep .ant-modal-title{
        padding-left: 280px;
      }
-    
-     ::ng-deep .ant-drawer-title {
+
+     ::ng-deep .ant-drawer-title{
        position: inherit;
        left: 30%;
        color: #FFFFFF;
@@ -88,38 +47,9 @@
      .input-data {
       width: 150px;
     }
-   
-   
-    a.disabled {
-      color: gray;
-      cursor: not-allowed;
-      text-decoration: underline;
-    }
-   
-   
-    .drop {
-      position: relative;
-      left: -20px;
-    }
-   
-    
-   
-    .table-data {
-      font-family: 'Biryani';
-      font-size: 15px;
-      color: #414f5a;
-    }
 
-  
-    .add-button {
-      position: relative;
-      bottom: 0%;
-    }
-   
-   
-    .add-custo-flex-div {
-      display: block;
-      flex-basis: auto;
+    .add-custo{
+      display: flex;
       flex-direction: column;
       flex-wrap: wrap;
       position: absolute;
@@ -128,166 +58,55 @@
       justify-content: space-between;
       top: 100px;
       background-color: #FFFFFF;
+      gap: 20px;
     }
-   
-   
-    .add-custo-flex-1 {
-      order: 1;
-      padding: 5px;
-   
-    }
-   
-    .add-custo-flex-2 {
-      order: 2;
-      padding: 5px;
-   
-    }
-   
-    .add-custo-flex-3{
-      order: 3;
-      padding: 5px;
-    }
-   
-   
-    .add-custo-flex-4 {
-      order: 4;
-      padding: 5px;
-   
-    }
-   
-    .add-custo-flex-5{
-      order: 5;
-      padding: 5px;
-   
-    }
-   
-   .title-modal-tbl{
+
+   .title-modal{
      position: relative;
      left: -185px;
      font-family: 'Biryani';
      font-size:medium;
      white-space: nowrap;
      font-weight:bold;
-
    }
-   
+
     .input-data {
       width: 150px;
     }
-   
-   
-    a.disabled {
-      color: gray;
-      cursor: not-allowed;
-      text-decoration: underline;
-    }
-   
-   
-    .drop {
-      position: relative;
-      left: -20px;
-    }
-   
-    
-   
-    .table-data {
-      font-family: 'Biryani';
-      font-size: 15px;
-      color: #414f5a;
-    }
-   
-   
-    
-    .edit-btn {
-      margin-right: 7px;
-      background-color: #FEFCFC;
-      color: #00aaff;
-      font-family: 'Biryani';
-      font-size: 15px;
-   
-    }
-   
-   
 
-    .delete-button {
-      margin-right: 7px;
-      background-color: #FEFCFC;
-      color: #a8071a;
-      font-family: 'Biryani';
-      font-size: 15px;
-    }
-   
-   
-    .save-btn {
-      background-color: #FEFCFC;
-      color: #00aaff;
-      font-family: 'Biryani';
-      font-size: 15px;
-      position: relative;
-      width: 80px;
-    }
-   
-   
-   
-    .cancel-btn {
-      background-color: #FEFCFC;
-      color: #00aaff;
-      font-family: 'Biryani';
-      font-size: 15px;
-      width: 80px;
-      bottom: -30px;
-
-    
-    }
-   
-    
-   
-    #edit-btn:hover {
-      background-color: #00aaff;
-      color: #FFFFFF;
-   
-    }
-   
-    #cancel-button:hover {
-      background-color: #00aaff;
-      color: #FFFFFF;
-    }
-   
-   
-    #delete-button:hover {
-      background-color: #a8071a;
-      color: #FFFFFF;
-   
-    }
-   
-    #save-btn:hover {
-      background-color: #00aaff;
-      color: #FFFFFF;
-    }
-   
-   
-   
-    .delete-btn-div {
-      bottom: -35px;
-    }
-   
-   
     .edit-cell {
       height: 100px;
       display: flex;
       flex-direction: column !important;
     }
-   
-    .errors-div {
-      padding-bottom: 1px;
-      float: left;
-      clear: left;
-    }
-   
-   
+
     .reloadIcon {
       position: relative;
       background-color: #414f5a;
       width: 10px;
     }
-   
+
+
+.drawer-title-templ{
+  position: relative;
+  top:-10px;
+  color:antiquewhite;
+  right:20px;
+}
+
+
+
+ ::ng-deep .ant-drawer-header{
+  background-color: #1c252e;
+  font-size: 20px;
+}
+
+
+/*
+::ng-deep .ant-drawer-title{
+  position: absolute !important;
+  left: 30% !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+  font-family: "Biryani" !important;
+} */

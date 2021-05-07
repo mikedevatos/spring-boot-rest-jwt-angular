@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { SaveUserAuthService } from './save-user-auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import * as isUndefined from 'lodash/isUndefined';
 import { HttpRequestsService } from './http-requests.service';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -16,8 +16,7 @@ export class AuthGuardRoleService implements CanActivate {
   constructor(private router: Router,
               private authStateService: SaveUserAuthService,
               private httpService: HttpRequestsService
-    ) { }
-
+              ) { }
 
   async canActivate(): Promise<boolean | UrlTree> {
     const employee = 'EMPLOYEE';
@@ -25,43 +24,23 @@ export class AuthGuardRoleService implements CanActivate {
 
     if (isUndefined(this.authStateService.userAuth)) {
 
+        await this.httpService.getUserInfo()
+                                      .pipe(
+                                           tap(
+                                                data =>  {this.authStateService.userAuth = data.role; },
+                                                err => {console.log(err)},
+                                                () => {}
+                                              )
+                                      )
+                                     .toPromise()
+                                     .catch(err=> { console.log(err); } )
 
 
-      try {
-
-        await (await this.httpService.getUserInfoPromise().catch(err => { console.log(err); }));
-      }
-      catch (e) {
-        console.log(e instanceof HttpErrorResponse);
-        throw e;
-      }
-
-
-
-
-      if (this.authStateService.userAuth.valueOf() === manager) {
-
-        return true;
-      }
-      else if (this.authStateService.userAuth.valueOf() === employee) {
-
-
-        return false;
-      }
     }
 
 
-    if (this.authStateService.userAuth.valueOf() === manager) {
-
-      return true;
-    }
-    else if (this.authStateService.userAuth.valueOf() === employee) {
-
-
-      return false;
-    }
-
-
+    if (this.authStateService.userAuth.valueOf() === manager)
+    return true;
 
     return this.router.createUrlTree(['/login']);
 

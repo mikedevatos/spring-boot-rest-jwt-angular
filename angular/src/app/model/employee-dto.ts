@@ -1,9 +1,9 @@
-import { EmployeeModel } from './employee-model';
+import { Employee } from './employee';
 
-export class EmployeeDTO {
+export interface EmployeeDTO {
 
-    public employees: EmployeeModel[];
-    public  count: number;
+    employees: Employee[];
+    count: number;
 
 
 }

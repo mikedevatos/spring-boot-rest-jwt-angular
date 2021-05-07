@@ -29,8 +29,9 @@
               }
             ],
             "styles": [
-              "src/theme.less",
-              "src/styles.css"
+              "src/styles.css",
+              "./node_modules/ng-zorro-antd/src/ng-zorro-antd.min.css",
+               "./node_modules/ng-zorro-antd/resizable/style/index.min.css"
             ],
             "scripts": []
           },

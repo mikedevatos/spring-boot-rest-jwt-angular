@@ -1,26 +1,23 @@
 package com.hotels.example.model;
 
 
-public class CurrentUser {
+import lombok.Getter;
+import lombok.Setter;
+import java.io.Serializable;
+
+@Setter
+@Getter
+public class CurrentUser implements Serializable {
 
     private String username;
     private String role;
 
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    @Override
+    public String toString() {
+        return "CurrentUser{" +
+                "username='" + username + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 
 }

@@ -1,0 +1,91 @@
+
+  .next-btn{
+    position: absolute;
+    left: -21px;
+    bottom: 1px;
+    color: #fefcfc;
+    background-color: #28343a ;
+    font-family: "Biryani";
+    border-radius: 3px;
+    border-color: #28343a;
+    width: 80px;
+    height: 35px;
+    font-size: 13px;
+  }
+
+
+
+  #next-btn:hover{
+    color: #00aaff;
+    background-color: #28343a ;
+  }
+
+
+.previus-btn{
+  position: absolute;
+  left:60px;
+  bottom: 1px;
+  color: #fefcfc;
+  background-color: #28343a ;
+  font-family: "Biryani";
+  border-radius: 3px;
+  border-color: #28343a;
+  width: 80px;
+  height: 35px;
+  font-size: 13px;
+}
+
+
+#previus-btn:hover{
+  color: #00aaff;
+  background-color: #28343a ;
+}
+
+
+
+  .errors-div {
+    position: relative;
+    float: left;
+    clear: left;
+    color: #a8071a;
+    bottom: -5px;
+  }
+
+  .steps-action{
+    position:absolute;
+    bottom: 1%;
+  }
+
+
+  .select-account-type {
+    position: relative;
+    font-size: 12px;
+    color: #2292a7;
+    font-weight: 600;
+    width: 200px;
+    left: 20%;
+    top: 40%;
+  }
+
+
+.drawer-title-templ{
+  position: relative;
+  top:-15px;
+  color:antiquewhite;
+  left:5px;
+}
+
+
+@media only screen and (max-width: 700px){
+  .select-account-type {
+    position: relative;
+    font-size: 12px;
+    color: #2292a7;
+    font-weight: 600;
+    top: 5%;
+  }
+}
+
+
+
+

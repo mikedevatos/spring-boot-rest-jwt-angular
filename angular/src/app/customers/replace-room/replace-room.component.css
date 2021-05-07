@@ -1,0 +1,79 @@
+.add-room{
+    position: relative;
+    left: 55%;
+  }
+
+.id{
+  position:relative;
+  left:5px
+
+}
+.price{
+  position: relative;
+  left: 40px;
+
+}
+.capacity{
+  position: relative;
+ left: 70px;
+}
+
+.capacity-data{
+  position: relative;
+  left: 95px;
+}
+
+#replace-room-btn:hover{
+  color: #00aaff;
+  background-color: #28343a ;
+}
+
+.replace-room-btn {
+  position: relative;
+  left: 89px;
+  border-color: #28343a;
+  color: #28343a;
+  background-color: #fff;
+}
+
+.expand-rooms-table {
+  position: relative;
+  width: 300px;
+  left: 8%;
+  align-items: center;
+}
+
+.room-container{
+  display: flex;
+  flex-direction:column;
+  position: relative;
+  width: 400px;
+  left: 5%;
+}
+
+.header-room{
+  position: relative;
+  color: #1b1c1c !important;
+  font-family: "Biryani" !important;
+  border-color: #BDBDBD;
+  border-width: 1px;
+  background-color: #28343a;
+  height: 40px;
+  border-style: solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  left: 8% !important;
+  top:-4px;
+  font-size: 24px;
+  width: 365px;
+}
+
+.header-room h3{
+position: relative;
+font-size: 16px;
+bottom: 0px;
+font-weight: lighter;
+color: #fff6f6;
+}

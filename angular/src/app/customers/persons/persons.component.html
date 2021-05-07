@@ -1,0 +1,204 @@
+
+<nz-table [nzBordered]=false class="expand-table-persons" nzSize="middle" #innerTable
+          [nzData]="persons" [nzPageSize]="30" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th colspan="8" class="expand-table-persons-header">
+                Persons
+              </th>
+            </tr>
+            <tr>
+              <th class="data-th" nzAlign="center">Id</th>
+              <th class="data-th" nzAlign="center">Firstname</th>
+              <th class="data-th" nzAlign="center">Lastname</th>
+              <th class="data-th" nzAlign="center">Email</th>
+            </tr>
+          </thead>
+  <tbody>
+    <tr *ngFor="let item of innerTable.data; index as ii">
+      <td nzAlign="center">{{ item.id }}</td>
+
+      <td id="table-data">
+        {{ item.firstName}}
+      </td>
+
+      <td id="table-data">
+        {{ item.lastName }}
+      </td>
+
+      <td id="table-data">
+        {{ item.email }}
+      </td>
+
+      <!-- edit person -->
+      <td>
+        <div>
+
+          <a nz-button nzType="primary" class="edit-btn" id="edit-btn"
+
+            (click)="startEditingPerson(item.id)">Edit</a>
+
+        </div>
+      </td>
+      <!-- delete person -->
+      <td>
+
+        <div nz-col nzSpan="50" class="delete-btn-person-div">
+
+          <button nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="delete(item.id)" nz-button
+            nzType="primary" id="delete-button" >Delete</button>
+
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<button nz-button  class="add-button"  id="add-btn"  (click)="startAddingPerson()" nzType="primary">Add</button>
+
+<!-- Editing person modal -->
+<nz-modal [(nzVisible)]="isVisibleEditingPerson" nzTitle="Edit Person" (nzOnCancel)="destroyModalEditingPerson()"
+  [nzMaskClosable]="false" [nzStyle]="{  width: '55%' }"
+  [nzBodyStyle]="{ height: '400px',position:'relative',right:'50%',bottom:'0px'}" nzWidth="900" [nzContent]="editPerson"
+  [nzFooter]="tplFooterPersonValid">
+  <ng-template #editPerson>
+
+    <div class="modal-edit-person">
+      <h3> email </h3>
+
+      <nz-input-group>
+        <div>
+          <input type="text" name="emailInput"  nzSize="large"  [formControl]="formEmail.get(personEditInput.id)"
+            nz-input class="person-edit-input" [(ngModel)]="personEditInput.email" placeholder="email" />
+
+          <div class="errors-div" style="color:red" *ngIf="formEmail.get(personEditInput.id).invalid">
+            minimum 4
+          </div>
+        </div>
+      </nz-input-group>
+
+      <h3> Firstname </h3>
+
+      <nz-input-group>
+        <div class="edit-input">
+          <input type="text" name="firstNameInput" [formControl]="formFirstName.get(personEditInput.id)"
+            placeholder="firstName" nz-input nzSize="large" class="person-edit-input" [(ngModel)]="personEditInput.firstName"
+            />
+
+          <div class="errors-div"  *ngIf="formFirstName.get(personEditInput.id).invalid">
+            minimum 4
+          </div>
+
+        </div>
+
+      </nz-input-group>
+
+      <h3> Lastname </h3>
+      <nz-input-group>
+        <div class="edit-input">
+          <input type="text" name="lastNameInput" [formControl]="formLastName.get(personEditInput.id)"
+            placeholder="lastName" nz-input nzSize="large" class="person-edit-input" [(ngModel)]="personEditInput.lastName"
+             />
+
+          <div class="errors-div"  *ngIf="formLastName.get(personEditInput.id).invalid" >
+            minimum 4
+          </div>
+
+        </div>
+
+      </nz-input-group>
+    </div>
+  </ng-template>
+
+  <ng-template #tplFooterPersonValid>
+
+    <ng-container *ngIf="(    formEmail.get(personEditInput.id).invalid
+                          ||  formFirstName.get(personEditInput.id).invalid
+                          ||  formLastName.get(personEditInput.id).invalid)  ; else savePersonTpml ">
+
+      <button
+              id="GhostButton"
+              nz-button
+              nzType="primary"
+              disabled
+               > Save</button>
+
+    </ng-container>
+
+    <ng-template #savePersonTpml>
+      <button nz-button  id="save-btn"  nzType="primary" (click)="update()">
+        save
+      </button>
+    </ng-template>
+
+  </ng-template>
+
+</nz-modal>
+
+
+<!-- Add Person Modal -->
+<nz-modal [(nzVisible)]="isVisiblePersonAdd" nzTitle="Add Person" (nzOnCancel)="destroyModalAddPerson()"
+  [nzMaskClosable]="false" [nzStyle]="{  width: '55%' }"
+  [nzBodyStyle]="{ height: '400px',position:'relative',right:'50%',bottom:'0px'}" nzWidth="900" [nzContent]="addPerson"
+  [nzFooter]="tplFooterPersonAdd">
+  <ng-template #addPerson>
+    <div class="modal-edit-person">
+      <h3> email </h3>
+      <nz-input-group>
+        <div>
+          <input type="text" name="emailInput" [formControl]="formEmail.get(newPersonId)" placeholder="email" nz-input
+            class="person-edit-input" [(ngModel)]="personEditInput.email"  />
+
+          <div class="errors-div"  *ngIf="formEmail.get(newPersonId).invalid" >
+            minimum 4
+          </div>
+        </div>
+      </nz-input-group>
+
+      <h3> firstName </h3>
+      <nz-input-group>
+        <div class="edit-input">
+          <input type="text" name="firstNameInput" [formControl]="formFirstName.get(newPersonId)"
+            placeholder="firstName" nz-input nzSize="large" class="person-edit-input" [(ngModel)]="personEditInput.firstName"
+            />
+
+          <div class="errors-div"  *ngIf="formFirstName.get(newPersonId).invalid">
+            minimum 4
+          </div>
+        </div>
+
+      </nz-input-group>
+
+      <h3> lastName </h3>
+      <nz-input-group>
+        <div class="edit-input">
+          <input type="text" name="lastNameInput" [formControl]="formLastName.get(newPersonId)"
+            nz-input nzSize="large" class="person-edit-input" [(ngModel)]="personEditInput.lastName" placeholder="lastName" />
+
+          <div class="errors-div" *ngIf="formLastName.get(newPersonId).invalid" >
+            minimum 4
+          </div>
+        </div>
+      </nz-input-group>
+    </div>
+  </ng-template>
+
+  <ng-template #tplFooterPersonAdd>
+
+    <ng-container *ngIf="(formEmail.get(newPersonId).invalid
+                        ||  formFirstName.get(newPersonId).invalid
+                        || formLastName.get(newPersonId).invalid); else savePersonTpml ">
+
+      <button id="GhostButton" nz-button nzType="primary" disabled  >Save</button>
+
+    </ng-container>
+
+    <ng-template #savePersonTpml>
+      <button nz-button nzType="primary" (click)="create()">
+        save
+      </button>
+
+    </ng-template>
+
+  </ng-template>
+</nz-modal>

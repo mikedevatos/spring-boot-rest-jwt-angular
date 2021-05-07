@@ -1,0 +1,196 @@
+<nz-table #RoomsTable [nzBordered]="false" (nzQueryParams)="onQueryParamsChange($event)" [nzPageIndex]="pageIndex"
+  [nzFrontPagination]="false" [nzPageSize]="pageSize" [nzData]="rooms" [nzTotal]="total"
+  (nzPageIndexChange)="getCurrentPage($event)" [nzLoading]="loading">
+
+  <thead>
+    <tr>
+      <th nzWidth="2px">
+        <a nz-dropdown [nzDropdownMenu]="menu">
+          <i nz-icon nzType="menu-fold"></i>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul class="drop" nz-menu nzSelectable>
+            <li nz-menu-item (click)="logout()">Logout</li>
+
+            <li *ngIf="!userManagerAuth" nz-menu-item> </li>
+
+            <li nz-menu-item routerLink="/customers">Customers</li>
+
+
+            <li *ngIf="userManagerAuth" nz-menu-item routerLink="/employees">Employees</li>
+
+            <li  nz-menu-item routerLink="/rooms">Rooms</li>
+
+          </ul>
+        </nz-dropdown-menu>
+      </th>
+      <th nzWidth="2%"> Id</th>
+      <th> </th>
+      <th>Price</th>
+      <th>Room Capacity</th>
+
+      <th class="reloadIcon">
+        <div>
+          <a>
+            <i nz-icon nzType="reload" nzTheme="outline" nzOutline="#eb2f96" (click)="ngOnInit(pageIndex)"></i>
+          </a>
+        </div>
+      </th>
+      <th nzWidth="20px"></th>
+      <th nzWidth="20px"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <ng-template ngFor let-data [ngForOf]="RoomsTable.data" let-i="index">
+
+      <tr>
+        <td></td>
+        <td id="table-data">
+          {{ data.id }}
+        </td>
+        <td></td>
+
+        <td id="table-data">
+
+          <ng-container *ngIf="!data.editRoom; else priceInputTempl">
+            {{ data.price}}
+          </ng-container>
+
+          <ng-template #priceInputTempl>
+            <nz-input-group>
+              <div class="edit-input">
+
+                <input type="text"  [formControl]="formPrice.get(data.id)"    nz-input
+
+                  placeholder="price" [ngModel]="editMap.get(data.id).price"
+
+                  (ngModelChange)="setMapPrice(data.id,$event)" />
+
+                <div class="errors-div"
+                  *ngIf="formPrice.get(data.id).invalid">
+                  minimum 1
+                </div>
+              </div>
+            </nz-input-group>
+          </ng-template>
+        </td>
+        <td>
+
+          <ng-container *ngIf="!data.editRoom; else roomCapacityInputTempl">
+            {{ data.roomCapacity}}
+          </ng-container>
+          <ng-template #roomCapacityInputTempl>
+            <nz-input-group>
+              <div class="edit-input">
+                <input type="text" [formControl]="formRoomCapacity.get(data.id)" nz-input
+                  placeholder="room capacity" [ngModel]="editMap.get(data.id).roomCapacity"
+                  (ngModelChange)="setMapRoomCapacity(data.id,$event)" />
+                <div class="errors-div"
+                  *ngIf="formRoomCapacity.get(data.id).invalid">
+                  minimum 4
+                </div>
+              </div>
+            </nz-input-group>
+          </ng-template>
+        </td>
+
+        <!--for reload button-->
+        <td>
+
+        </td>
+
+        <!-- edit button -->
+        <td>
+
+          <ng-container *ngIf="!data.editRoom; else editTempl">
+            <a (click)="startEditingRoom(data.id)" id="edit-btn"  nz-button nzType="primary">Edit</a>
+          </ng-container>
+
+          <ng-template #editTempl>
+            <div nz-col nzSpan="50" class="edit-cell">
+              <button
+                *ngIf="(formPrice.get(data.id).invalid)"
+                id="GhostButton" nz-button nzType="primary" disabled
+                >Save</button>
+
+              <button
+                *ngIf="(!formPrice.get(data.id).invalid)"
+                id="save-btn"   nz-button nzType="primary" (click)="updateRoom(data.id)">Save</button>
+
+              <button nz-popconfirm nzPopconfirmTitle="Sure to cancel?"  id="cancel-button"   (nzOnConfirm)="cancelEdit(data.id)"
+                nz-button nzType="primary" >Cancel</button>
+            </div>
+          </ng-template>
+
+        </td>
+
+        <!-- delete button -->
+        <td>
+          <div nz-col nzSpan="50">
+            <button nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="deleteRoom(data.id)" nz-button
+              nzType="primary" id="delete-button" >   Delete   </button>
+          </div>
+        </td>
+      </tr>
+
+</ng-template>
+</tbody>
+</nz-table>
+
+<button nz-button id="add-btn" (click)="startAddingRoom()" nzType="primary">Add</button>
+
+
+<!-- add room modal -->
+ <nz-modal [(nzVisible)]="isVisibleModal" nzTitle="Add room" (nzOnCancel)="destroyModal()" [nzStyle]="{  width: '35%' }"
+  [nzBodyStyle]="{ height: '350px',position:'relative',right:'50%',bottom:'0px'}" nzWidth="700" [nzContent]="addNewRoom"
+  [nzFooter]="tplFooterRoomAddValid">
+  <ng-template #addNewRoom>
+
+    <div class="add-room">
+      <h3> Price </h3>
+      <nz-input-group>
+        <div>
+          <input type="text" name="emailInput"   class="edit-input"  nzSize="large" [formControl]="formPrice.get(addRoomId)" placeholder="price" nz-input
+            [(ngModel)]="addingRoom.price"  />
+
+          <div class="errors-div" *ngIf="formPrice.get(addRoomId).invalid" >
+            minimum 4
+          </div>
+        </div>
+      </nz-input-group>
+
+      <h3> Room Capacity </h3>
+      <nz-input-group>
+        <div>
+          <input type="text" name="firstNameInput" [formControl]="formRoomCapacity.get(addRoomId)"
+            placeholder="Room Capacity"   class="edit-input" nz-input nzSize="large" [(ngModel)]="addingRoom.roomCapacity"
+            />
+
+          <div class="errors-div" *ngIf="formRoomCapacity.get(addRoomId).invalid" >
+            minimum 4
+          </div>
+        </div>
+      </nz-input-group>
+
+    </div>
+
+  </ng-template>
+
+
+  <ng-template #tplFooterRoomAddValid>
+    <ng-container *ngIf="(formPrice.get(addRoomId).invalid  ||  formRoomCapacity.get(addRoomId).invalid ); else saveRoomTpml ">
+
+      <button id="GhostButton" nz-button nzType="primary" disabled class="save-btn">Save</button>
+    </ng-container>
+
+    <ng-template #saveRoomTpml>
+      <button nz-button class="save-btn" id="save-btn" nzType="primary" (click)="saveAddingRoom()">
+        save
+      </button>
+
+    </ng-template>
+
+  </ng-template>
+
+</nz-modal>

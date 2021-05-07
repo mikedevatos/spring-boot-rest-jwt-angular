@@ -1,120 +1,131 @@
 package com.hotels.example.security;
 
-
 import com.hotels.example.model.User;
 import com.hotels.example.repositories.UserRepo;
 import io.jsonwebtoken.*;
 import io.micrometer.core.instrument.util.StringUtils;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class AuthorizationJwtFilter extends OncePerRequestFilter {
+
+    private List<String> skipUrls =
+                                    new ArrayList<>(Arrays.asList(
+                                                                   "/api/login",
+                                                                   "/actuator/**"    )  );
+
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
     private UserRepo userRepository;
 
     private static final Logger log = LoggerFactory.getLogger(AuthorizationJwtFilter.class);
 
 
-    public AuthorizationJwtFilter(UserRepo userRepository) {
-
+    @Autowired
+    public AuthorizationJwtFilter( UserRepo userRepository) {
         this.userRepository = userRepository;
     }
 
+
+    @SneakyThrows
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    {
+        UsernamePasswordAuthenticationToken authe=null;
 
-        Optional<Authentication> authe = Optional.ofNullable(getAuthenticationReq(request));
+          try
+            {
+              authe = getAuthenticationReq(request, response);
+            }
+          catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+              e.printStackTrace();
+              log.trace("Invalid JWT signature trace: {}", e);
+              response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Exception");
+              return;
 
-        if ( !authe.isPresent())     {
+          } catch (ExpiredJwtException e) {
+              e.printStackTrace();
+              log.trace("Expired JWT token trace: {}", e);
+              response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Exception");
+              return;
+          } catch (UnsupportedJwtException e) {
+              e.printStackTrace();
+              log.trace("Unsupported JWT token trace: {}", e);
+              response.sendError(HttpServletResponse.SC_BAD_REQUEST,"JWT Exception");
+              return;
 
-            SecurityContextHolder.clearContext();
+          } catch (IllegalArgumentException e) {
+              e.printStackTrace();
+              log.info("JWT token compact of handler are invalid.");
+              log.trace("JWT token compact of handler are invalid trace: {}", e);
+              response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Exception");
+              return;
+          }
 
-            filterChain.doFilter(request, response);
-
-            return;
+        if (authe==null)  {
+                log.debug("authentication is invalid :");
+                SecurityContextHolder.clearContext();
+                filterChain.doFilter(request, response);
+                return;
+            }
+        SecurityContextHolder.getContext().setAuthentication(authe);
+        log.debug("authentication is :"+authe);
+        filterChain.doFilter(request, response);
         }
 
-
-        SecurityContextHolder.getContext().setAuthentication(authe.get());
-
-        filterChain.doFilter(request, response);
-
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        log.debug("url for skipping is " + request.getRequestURI() );
+        return skipUrls.stream().anyMatch(p -> pathMatcher.match(p, request.getRequestURI() ) );
     }
 
 
-
+   @SneakyThrows
     //get bearer_token from request and validate it
-    private UsernamePasswordAuthenticationToken getAuthenticationReq(HttpServletRequest request) {
-
-
-
+    private UsernamePasswordAuthenticationToken getAuthenticationReq(HttpServletRequest request,HttpServletResponse response) {
         //get header
         String token = request.getHeader(JwtTokenSource.header);
-
-
         if (StringUtils.isNotEmpty(token) && token.startsWith(JwtTokenSource._prefix)) {
-            try {
+//            try {
 
                 //get username that corresponds to the token
                 String bearerToken = token.substring(7);
 
-                Claims claims = Jwts.parser()
-                        .setSigningKey(JwtTokenSource.key.getBytes())
+          Claims claims = Jwts.parser()
+                        .setSigningKey( JwtTokenSource.key.getBytes() )
                         .parseClaimsJws(bearerToken)
                         .getBody();
-
-
                 String username = claims.getSubject();
-
 
                 //validate bearer_token
                 if (StringUtils.isNotEmpty(username)) {
+
                     Optional<User> u = userRepository.findByUsername(username);
 
                     if (u.isPresent()) {
+                        log.debug("username is"+ u.get());
                         User user = u.get();
                         return new UsernamePasswordAuthenticationToken(username, user.getPassword(), user.getAuthorities());
-
                     }
-
+                    return null;
                 }
-            }
-
-
-            catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-                log.info("Invalid JWT signature.");
-                log.trace("Invalid JWT signature trace: {}", e);
-            } catch (ExpiredJwtException e) {
-                log.info("Expired JWT token.");
-                log.trace("Expired JWT token trace: {}", e);
-            } catch (UnsupportedJwtException e) {
-                log.info("Unsupported JWT token.");
-                log.trace("Unsupported JWT token trace: {}", e);
-            } catch (IllegalArgumentException e) {
-                log.info("JWT token compact of handler are invalid.");
-                log.trace("JWT token compact of handler are invalid trace: {}", e);
-            }
-
         }
-
         return null;
     }
-
-
-
 
 
 

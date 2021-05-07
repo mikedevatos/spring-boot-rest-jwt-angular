@@ -1,29 +1,26 @@
 package com.hotels.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class Roles {
+//@Setter
+public class Roles implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
-    @ManyToMany(fetch=FetchType.EAGER,cascade={CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinTable(
-            name="user_roles",
-            joinColumns={@JoinColumn(name="roles_id",referencedColumnName = "id")},
-            inverseJoinColumns={@JoinColumn(name="user_id",referencedColumnName = "id")}
-    )
+    @OneToMany(    mappedBy = "role", fetch=FetchType.EAGER,cascade={CascadeType.MERGE,CascadeType.REFRESH})
     private Set<User> users;
 
     @Column(name="type_role")
     private String type;
-
 
 
     public Long getId() {
@@ -40,7 +37,7 @@ public class Roles {
     }
 
     public void setType_role(String typeTole) {
-        this.type = type;
+        this.type = typeTole;
     }
 
 

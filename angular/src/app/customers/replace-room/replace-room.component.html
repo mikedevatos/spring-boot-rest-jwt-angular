@@ -1,0 +1,86 @@
+<div class="room-container">
+
+  <div class="header-room">
+     <h3>Room</h3>
+  </div>
+
+  <table class="expand-rooms-table">
+    <tr>
+      <th class="id">Id</th>
+
+      <th   class="price" >price</th>
+
+      <th  class="capacity" >capacity</th>
+
+    </tr>
+
+    <tr>
+      <td   class="id">{{ customer.room.id }}</td>
+
+      <td  class="price">{{ customer.room.price }}</td>
+
+      <td  class="capacity-data">{{ customer.room.roomCapacity }}</td>
+
+
+      <td>
+        <button nz-button  id="replace-room-btn"   class="replace-room-btn"
+        (click)="startReplacingCustomerRoom(customer)" nzType="default">
+          Replace Room
+        </button>
+      </td>
+
+      </tr>
+  </table>
+
+
+<nz-modal [(nzVisible)]="isVisibleReplaceRoom" nzTitle="Replace Room" (nzOnCancel)="destroyModalReplaceRoom()"
+  [nzStyle]="{ width: '35%' }" [nzBodyStyle]="{
+    height: '200px',
+    position: 'relative',
+    right: '50%',
+    bottom: '0px'
+  }" nzWidth="700" [nzContent]="addNewRoom" [nzFooter]="tplFooter">
+
+  <ng-template #addNewRoom>
+    <nz-table class="add-room" [nzTemplateMode]="true">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>price</th>
+          <th>capacity</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <nz-select nzPlaceHolder="Please select" [nzOptions]="roomsList" [ngModel]="selectedRoomId"
+              (ngModelChange)="dropDownSelectChangeRoom($event)">
+            </nz-select>
+          </td>
+
+          <td>
+            {{ replaceRoom.price }}
+          </td>
+          <td>
+            {{ replaceRoom.roomCapacity }}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-template>
+
+  <ng-template #tplFooter>
+
+    <button *ngIf="!is_RoomBooked"   nz-button id="save-btn" nzType="primary" (click)="saveReplacingCustomerRoom()">
+      save
+    </button>
+
+    <button *ngIf="is_RoomBooked"  disabled nz-button id="save-btn" nzType="primary">
+      save
+    </button>
+
+  </ng-template>
+
+
+</nz-modal>
