@@ -1,6 +1,5 @@
 package com.hotels.example.security;
 
-
 import com.hotels.example.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -44,8 +43,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
               .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+
                 .addFilter(new AuthenticationJwtFilter(authenticationManager()))
                 .addFilterBefore(authorizationJwtFilter, AuthenticationJwtFilter.class)
+
                 .authorizeRequests()
 
                 .antMatchers(HttpMethod.GET,"/api/userinfo").permitAll()

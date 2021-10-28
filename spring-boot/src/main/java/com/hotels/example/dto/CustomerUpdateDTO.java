@@ -6,33 +6,40 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Optional;
+
 @NoArgsConstructor
 public class CustomerUpdateDTO implements Serializable {
 
 
-    private Integer Id;
-
-    private  Optional<@Min(0) Float>  bill = Optional.empty();
-
-    private  Optional<Room>   room =Optional.empty();
-
-    private Optional<@Length(min=2,max = 64,message = "account type must be between 2 and 64 ")   String> accountType =Optional.empty();
-
-    public Optional<Room> getRoom() {
-        return room;
-    }
-
-    public void setRoom(Optional<Room> room) {
-        this.room = room;
-    }
+    private Integer id;
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer id) {
-        Id = id;
+        this.id = id;
     }
+
+    private  Optional<@Min(0) Float>  bill = Optional.empty();
+
+    private  Optional<Integer>   roomId =Optional.empty();
+
+    private Optional<@Length(min=2,max = 64,message = "account type must be between 2 and 64 ")   String> accountType =Optional.empty();
+
+
+
+
+    public Optional<Integer> getRoomId() {
+        return roomId;
+    }
+
+    public void setRoom(Optional<Room> room) {
+        this.roomId = roomId;
+    }
+
+
+
 
     public Optional<Float> getBill() {
         return bill;

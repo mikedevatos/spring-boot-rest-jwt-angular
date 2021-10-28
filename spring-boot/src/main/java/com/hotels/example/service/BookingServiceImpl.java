@@ -9,8 +9,7 @@ import com.hotels.example.model.Room;
 import com.hotels.example.repositories.BookingRepo;
 import com.hotels.example.repositories.CustomerRepo;
 import com.hotels.example.util.DatesUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
@@ -23,9 +22,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BookingServiceImpl {
-
-   Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
 
    private BookingRepo bookingRepo ;
    private CustomerRepo customerRepo;
@@ -37,11 +35,13 @@ public class BookingServiceImpl {
     }
 
     @Caching(evict = {
-              @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result !=null"),
+              @CacheEvict(value="customers",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result !=null"),
               @CacheEvict(cacheNames="roomBookings",key="#room.getId()",cacheManager = "caffeineCacheManager", condition = "#result !=null")
              } )
-    @Transactional(rollbackFor = {RoomIsBookedException.class,StartDateAfterEndDateException.class,NoChangesHaveBeenMadeToBooking.class})
-    public Booking update (Booking booking, Customer custo, Room room )  throws RoomIsBookedException, StartDateAfterEndDateException, NoChangesHaveBeenMadeToBooking {
+    @Transactional(rollbackFor = {RoomIsBookedException.class,
+                                  StartDateAfterEndDateException.class,
+                                  NoChangesHaveBeenMadeToBooking.class})
+    public Booking update (Booking booking, Customer custo, Room room ) {
 
         final LocalDate startDate = booking.getStartBooking().toLocalDate();
         final LocalDate endDate = booking.getEndBooking().toLocalDate();
@@ -57,14 +57,12 @@ public class BookingServiceImpl {
 
         /** get bookings for updatable room for comparison with customer booking dates  **/
         List<Booking> bookings = !room.getCustomers().isEmpty()    ?
-
                                   room.getCustomers()
                                  .stream()
                                  .map(Customer::getBooking)
 
                                  /**dont include current booking for comparison **/
                                  .filter(b -> b.getId() != booking.getId())
-
                                  .filter(b ->
                                          !( endDate.isBefore(b.getStartBooking().toLocalDate())  ||
                                             startDate.isAfter(b.getEndBooking().toLocalDate()       )))

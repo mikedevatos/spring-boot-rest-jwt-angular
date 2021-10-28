@@ -2,8 +2,10 @@ package com.hotels.example.service;
 
 import com.hotels.example.model.User;
 import com.hotels.example.repositories.EmployeeRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +17,7 @@ import java.util.List;
 
   @Service
   @Transactional
+  @Slf4j
 public class EmployeeServiceImpl  {
 
      private  final String employeeRole="EMPLOYEE";
@@ -27,7 +30,8 @@ public class EmployeeServiceImpl  {
 
    @Transactional
    @Caching( evict = {
-           @CacheEvict(value = "employeesDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null")
+           @CacheEvict(value = "employees",allEntries = true,
+                       cacheManager = "caffeineCacheManager",condition = "#result != null")
    })
   public void deleteEmployee(Integer id){
          employeeRepo.deleteById(id);
@@ -36,7 +40,9 @@ public class EmployeeServiceImpl  {
 
     @Transactional
     @Caching( evict = {
-            @CacheEvict(value = "employeesDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null")
+            @CacheEvict(value = "employees",allEntries = true,
+                        cacheManager = "caffeineCacheManager",
+                        condition = "#result != null")
     })
    public User saveEmployee(User user){
      return    employeeRepo.save(user);
@@ -48,8 +54,11 @@ public class EmployeeServiceImpl  {
         return employee;
     }
 
-    
-    public List<User> findPagedEmployees(int page, int size) {
+      @Cacheable(cacheNames="employees",
+                 key="#page",
+                 cacheManager = "caffeineCacheManager",
+                 condition = "#result != null" )
+      public List<User> findPagedEmployees(int page, int size) {
         Pageable paging = PageRequest.of(page, size);
         Page<User> pagedEmpl = employeeRepo.findByRole_Type_Like(employeeRole,paging);
         List<User> emp = pagedEmpl.getContent();

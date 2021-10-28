@@ -27,10 +27,13 @@ public class PersonServiceImpl {
 
     @Caching(
             evict = {
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result !=null")
+            @CacheEvict(value="customers",
+                        allEntries = true,
+                        cacheManager = "caffeineCacheManager",
+                        condition = "#result !=null")
     })
     @Transactional(rollbackFor = RoomCapacitySurpassedException.class)
-    public  Person create(Person person, Customer custo)  throws RoomCapacitySurpassedException {
+    public  Person create(Person person, Customer custo) {
         if( custo.getPersons().size() >=  custo.getRoom().getRoomCapacity() )
            throw new RoomCapacitySurpassedException("room capacity has been reached ");
 
@@ -39,7 +42,8 @@ public class PersonServiceImpl {
 
     @Transactional
     @Caching( evict = {
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null")
+            @CacheEvict(value="customers",allEntries = true,
+                         cacheManager = "caffeineCacheManager",condition = "#result != null")
     })
     public Person update(Person p){
         return personRepo.save(p);
@@ -56,7 +60,9 @@ public Person findBy_Id(Integer id) {
 
 @Transactional
 @Caching( evict = {
-        @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result == true")
+        @CacheEvict(value="customers",allEntries = true,
+                     cacheManager = "caffeineCacheManager",
+                     condition = "#result == true")
 })
  public boolean delete (Integer id){
          personRepo.deleteById(id);

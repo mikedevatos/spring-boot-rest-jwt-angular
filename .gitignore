@@ -1,8 +1,9 @@
-/target/
-.classpath
+target/
+spring-boot/.classpath
 .factorypath
 .classpath
 .project
 demo.iml
 .settings/
 .idea/
+*node_modules/*

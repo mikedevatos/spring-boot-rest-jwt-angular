@@ -5,8 +5,7 @@ import com.hotels.example.repositories.UserRepo;
 import io.jsonwebtoken.*;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class AuthorizationJwtFilter extends OncePerRequestFilter {
 
     private List<String> skipUrls =
@@ -32,7 +32,6 @@ public class AuthorizationJwtFilter extends OncePerRequestFilter {
     private AntPathMatcher pathMatcher = new AntPathMatcher();
     private UserRepo userRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorizationJwtFilter.class);
 
 
     @Autowired
@@ -40,41 +39,32 @@ public class AuthorizationJwtFilter extends OncePerRequestFilter {
         this.userRepository = userRepository;
     }
 
-
     @SneakyThrows
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
     {
         UsernamePasswordAuthenticationToken authe=null;
-
-          try
-            {
+        try  {
               authe = getAuthenticationReq(request, response);
-            }
+             }
           catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
               e.printStackTrace();
               log.trace("Invalid JWT signature trace: {}", e);
               response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Exception");
               return;
-
           } catch (ExpiredJwtException e) {
               e.printStackTrace();
               log.trace("Expired JWT token trace: {}", e);
               response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Exception");
               return;
-          } catch (UnsupportedJwtException e) {
+          } catch (Exception e) {
               e.printStackTrace();
-              log.trace("Unsupported JWT token trace: {}", e);
-              response.sendError(HttpServletResponse.SC_BAD_REQUEST,"JWT Exception");
-              return;
-
-          } catch (IllegalArgumentException e) {
-              e.printStackTrace();
-              log.info("JWT token compact of handler are invalid.");
-              log.trace("JWT token compact of handler are invalid trace: {}", e);
+              log.trace("JWT Error Exception: {} ",e);
               response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Exception");
               return;
-          }
+        }
 
         if (authe==null)  {
                 log.debug("authentication is invalid :");
@@ -94,11 +84,12 @@ public class AuthorizationJwtFilter extends OncePerRequestFilter {
     }
 
 
-   @SneakyThrows
     //get bearer_token from request and validate it
-    private UsernamePasswordAuthenticationToken getAuthenticationReq(HttpServletRequest request,HttpServletResponse response) {
+    private UsernamePasswordAuthenticationToken getAuthenticationReq(HttpServletRequest request,
+                                                                     HttpServletResponse response) {
         //get header
         String token = request.getHeader(JwtTokenSource.header);
+
         if (StringUtils.isNotEmpty(token) && token.startsWith(JwtTokenSource._prefix)) {
 //            try {
 
@@ -117,19 +108,17 @@ public class AuthorizationJwtFilter extends OncePerRequestFilter {
                     Optional<User> u = userRepository.findByUsername(username);
 
                     if (u.isPresent()) {
+
                         log.debug("username is"+ u.get());
                         User user = u.get();
-                        return new UsernamePasswordAuthenticationToken(username, user.getPassword(), user.getAuthorities());
+                        return new UsernamePasswordAuthenticationToken(username,
+                                                                       user.getPassword(),
+                                                                       user.getAuthorities());
                     }
                     return null;
                 }
         }
         return null;
     }
-
-
-
-
-
 
 }

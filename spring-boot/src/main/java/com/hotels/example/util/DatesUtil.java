@@ -1,16 +1,13 @@
 package com.hotels.example.util;
 
-import com.hotels.example.model.Booking;
-import com.hotels.example.model.Customer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+@Slf4j
 public class DatesUtil {
-     static Logger  log = LoggerFactory.getLogger(DatesUtil.class);
 
     public static List<LocalDate> getDates(LocalDate startDate, LocalDate endDate){
 

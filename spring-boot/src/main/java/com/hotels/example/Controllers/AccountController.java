@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequestMapping(value = "/api")
-
 public class AccountController {
     Logger log = LoggerFactory.getLogger(AccountController.class);
 
@@ -38,7 +37,6 @@ public class AccountController {
 
 
     @RequestMapping(value = "/userinfo", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-
     public ResponseEntity<CurrentUser>  getCurrentUserInfo() {
         String username=null;
 

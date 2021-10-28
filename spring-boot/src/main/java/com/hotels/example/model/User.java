@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,8 +19,7 @@ import java.util.List;
 @Entity
 @Table(name="users")
 //@Setter
-public class User implements UserDetails {
-
+public class User implements UserDetails,Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +27,7 @@ public class User implements UserDetails {
     private Integer id;
 
 
-    @JsonIgnore
-    @ManyToOne(cascade ={CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "roles_id")
     private Roles role;
 
@@ -48,11 +47,9 @@ public class User implements UserDetails {
     @Size(min=4,max = 64)
     private String lastName;
 
-    @JsonIgnoreProperties("users")
     public Roles getRole() {
         return role;
     }
-
 
 
     public Integer getId() {
@@ -80,12 +77,9 @@ public class User implements UserDetails {
     }
 
 
-
-
     public void setUsername(String username) {
         this.username = username;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -109,13 +103,11 @@ public class User implements UserDetails {
     }
 
     @Override
-
     public String getPassword() {
         return password;
     }
 
     @Override
-
     public String getUsername() {
         return username;
     }
@@ -129,7 +121,6 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     @Transient
-
     public boolean isAccountNonLocked() {
         return true;
     }
@@ -137,7 +128,6 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     @Transient
-
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -149,7 +139,6 @@ public class User implements UserDetails {
         this.setActive();
         return this.getActive() == 1;
     }
-
 
 
     @JsonIgnore

@@ -142,7 +142,7 @@
 
 
 <!-- add room modal -->
- <nz-modal [(nzVisible)]="isVisibleModal" nzTitle="Add room" (nzOnCancel)="destroyModal()" [nzStyle]="{  width: '35%' }"
+ <nz-modal [(nzVisible)]="isVisibleAddRoom" nzTitle="Add room" (nzOnCancel)="closeAddRoomModal()" [nzStyle]="{  width: '35%' }"
   [nzBodyStyle]="{ height: '350px',position:'relative',right:'50%',bottom:'0px'}" nzWidth="700" [nzContent]="addNewRoom"
   [nzFooter]="tplFooterRoomAddValid">
   <ng-template #addNewRoom>

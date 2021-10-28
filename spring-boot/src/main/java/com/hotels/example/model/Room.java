@@ -50,7 +50,6 @@ public class Room implements Serializable {
     @Min(1)
     private int roomCapacity;
 
-
     @JsonView(Views.ResponseView.class)
     @JsonIgnoreProperties("room")
     @OneToMany(mappedBy="room",fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.REFRESH})

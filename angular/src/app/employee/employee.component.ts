@@ -55,7 +55,7 @@ export class EmployeeComponent implements OnInit {
 
     this.loading = true;
     this.visibleDrawer = false;
-    this.pageSize = 4;
+    this.pageSize = 20;
     this.iSPasswordModalVisible=false;
     this.pageIndex = 1;
 

@@ -9,24 +9,27 @@ import com.hotels.example.repositories.RoomRepo;
 import com.hotels.example.service.CustomerServiceImpl;
 import com.hotels.example.service.RoomServiceImpl;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
 @RestController
 @RequestMapping(value = "/api")
+@Slf4j
 public class CustomerController {
-    Logger log =LoggerFactory.getLogger(CustomerController.class);
 
      private CustomerServiceImpl customerService;
      private CustomerRepo customerRepo;
@@ -47,34 +50,45 @@ public class CustomerController {
 
     /**get**/
     @RequestMapping(value = "/customer/{page}/{size}", method = RequestMethod.GET)
-    @Cacheable(cacheNames="customersDTO",key="#page",cacheManager = "caffeineCacheManager")
     @JsonView(Views.ResponseView.class)
     public ResponseEntity<CustomersDTO> getPageCustomers(@PathVariable Integer page, @PathVariable int size) {
 
         long total = customerService.count();
 
         List<Customer> customers = customerService.findAllbyPage(page,size);
+
         CustomersDTO customDTO=new CustomersDTO();
         customDTO.setCustomer(customers);
         customDTO.setCount(total);
+
         log.debug("showing   customers page  "+page +"  and size  " + size);
         return new ResponseEntity<>(customDTO, HttpStatus.OK);
+
     }
 
     /**put**/
     @RequestMapping(value = "/customer", method = RequestMethod.PUT)
-    @SneakyThrows
     public ResponseEntity<CustomerUpdateDTO> update(@Valid @RequestBody CustomerUpdateDTO custoDTO) {
 
-        if (this.customerRepo.existsById( custoDTO.getId() ) ){
+        log.debug("customer id is :"+ custoDTO.getId());
 
-            Customer custo  = customerService.findBy_Id( custoDTO.getId() );
+        Optional<Customer> customer = this.customerService.findById(custoDTO.getId());
 
-            Optional<Room> optionalRoomReplacing = custoDTO.getRoom();
+        if (customer.isPresent()){
+            Customer custo  = customer.get();
 
-            if(optionalRoomReplacing.isPresent() && roomRepo.existsById( optionalRoomReplacing.get().getId() ) ) {
+            log.debug("room is :" +custo.getRoom().toString() );
 
-                      Room replacingRoom = roomRepo.getOne( optionalRoomReplacing.get().getId() );
+            Optional<Room> _replacingRoom=null;
+
+            if(custoDTO.getRoomId().isPresent()) {
+                _replacingRoom = roomRepo.findById(custoDTO.getRoomId().get());
+            }
+
+            log.debug("optionalReplacing id is :"+ _replacingRoom.get().getId() );
+            if(_replacingRoom.isPresent()) {
+
+                      Room replacingRoom = _replacingRoom.get();
                       Room initialRoom =custo.getRoom();
 
                       if( !( initialRoom.getId() == replacingRoom.getId() ) )
@@ -113,7 +127,6 @@ public class CustomerController {
 
 /**post**/
     @RequestMapping(value = "/customer", method = RequestMethod.POST)
-    @SneakyThrows
     public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer){
 
        if (customer.getId() != null)

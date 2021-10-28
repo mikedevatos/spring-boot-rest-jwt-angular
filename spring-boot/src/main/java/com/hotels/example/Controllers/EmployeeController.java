@@ -8,8 +8,7 @@ import com.hotels.example.model.*;
 import com.hotels.example.repositories.EmployeeRepo;
 import com.hotels.example.repositories.RolesRepo;
 import com.hotels.example.service.EmployeeServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,9 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/api")
 @Validated
+@Slf4j
 public class EmployeeController {
 
-    Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
     private EmployeeRepo  employeeRepo;
     private RolesRepo rolesRepo;
@@ -51,7 +50,6 @@ public class EmployeeController {
 
 
     @RequestMapping(value = "/employee/{page}/{size}", method = RequestMethod.GET)
-    @Cacheable(cacheNames="employeesDTO",key="#page",cacheManager = "caffeineCacheManager")
     public ResponseEntity<EmployeesDTO> getPageCustomers(@PathVariable int page, @PathVariable int size) {
 
         long total = rolesRepo.countEmployees();
@@ -77,10 +75,9 @@ public class EmployeeController {
         EmployeesDTO employeesDTO =new EmployeesDTO();
 
         employeesDTO.setEmployees(employeeDtoList);
-
         employeesDTO.setCount(total);
+
         log.debug("showing   employees page  "+page +"  and size  " + size);
-        
         return new ResponseEntity<>(employeesDTO, HttpStatus.OK);
     }
     

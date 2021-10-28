@@ -43,7 +43,6 @@ public class BookingController {
     }
 
     @RequestMapping(value = "/booking", method = RequestMethod.PUT)
-    @SneakyThrows
     public ResponseEntity<Booking> update(@Valid @RequestBody Booking booking) {
 
         log.debug("booking controller updating BOOKING : " +booking.toString()  );

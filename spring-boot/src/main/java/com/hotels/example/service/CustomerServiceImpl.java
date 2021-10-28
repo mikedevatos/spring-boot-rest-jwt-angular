@@ -5,9 +5,9 @@ import com.hotels.example.errors.RoomIsBookedException;
 import com.hotels.example.model.*;
 import com.hotels.example.repositories.CustomerRepo;
 import com.hotels.example.util.DatesUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
@@ -23,18 +23,22 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class CustomerServiceImpl{
     private CustomerRepo customerRepo;
     private RoomServiceImpl roomService;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepo customerRepo, RoomServiceImpl roomService) {
+    public CustomerServiceImpl(CustomerRepo customerRepo,
+                               RoomServiceImpl roomService ) {
         this.customerRepo = customerRepo;
         this.roomService = roomService;
     }
 
-    Logger log =LoggerFactory.getLogger(CustomerServiceImpl.class);
-
+    @Cacheable( cacheNames="customers",
+                key="#page",
+                cacheManager = "caffeineCacheManager",
+                unless="#result.size() <= 0")
        public List<Customer> findAllbyPage(Integer page, int size){
                Pageable paging = PageRequest.of(page, size);
                Page<Customer> pagedCusto = customerRepo.findAll(paging);
@@ -48,6 +52,10 @@ public class CustomerServiceImpl{
 
        }
 
+       public Optional<Customer> findById(Integer id){
+           return   customerRepo.findById(id);
+       }
+
     public long count(){
       return  customerRepo.count();
     }
@@ -55,7 +63,7 @@ public class CustomerServiceImpl{
     /** delete customer**/
     @Transactional
     @Caching( evict = {
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result == true")
+            @CacheEvict(value="customers",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result == true")
     })
     public boolean delete (Integer id) {
             boolean idExists =customerRepo.existsById(id);
@@ -66,7 +74,9 @@ public class CustomerServiceImpl{
     /** updating customer **/
     @Transactional
     @Caching( evict = {
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null")
+            @CacheEvict(value="customers",
+                        allEntries = true,
+                        cacheManager = "caffeineCacheManager",condition = "#result != null")
     })
     public Customer update(Customer custo){
       return  customerRepo.save(custo);
@@ -76,9 +86,10 @@ public class CustomerServiceImpl{
     /** replacing customer room**/
     @Transactional(rollbackFor = { RoomIsBookedException.class, RoomCapacitySurpassedException.class  }  )
     @Caching( evict = {
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null")
+            @CacheEvict(value="customers",allEntries = true,
+                        cacheManager = "caffeineCacheManager",condition = "#result != null")
     }   )
-    public Customer replaceRoom(Customer c, Room replacingRoom)  throws RoomIsBookedException,RoomCapacitySurpassedException {
+    public Customer replaceRoom(Customer c, Room replacingRoom){
 
         final   LocalDate start =c.getBooking().getStartBooking().toLocalDate();
         final  LocalDate end =  c.getBooking().getEndBooking().toLocalDate();
@@ -89,15 +100,15 @@ public class CustomerServiceImpl{
         if(  c.getPersons().size()  >  replacingRoom.getRoomCapacity() )
           throw  new RoomCapacitySurpassedException("total persons surpassed room capacity");
 
-
-        /**get room bookings */
-        Set<Booking> bookings =
-                                 !replacingRoom.getCustomers().isEmpty()   ?
+        /**get room bookings  and validation*/
+        Set<Booking> bookings =  !replacingRoom.getCustomers().isEmpty()   ?
                                   replacingRoom.getCustomers()
                                  .stream()
                                  .map(Customer::getBooking)
-                                 .filter( b-> !( end.isBefore(b.getStartBooking().toLocalDate()) ||
-                                                 start.isAfter(b.getEndBooking().toLocalDate())     ) )
+
+                                    //validation not booked
+                                 .filter( b-> !( end.isBefore(b.getStartBooking().toLocalDate())  ||
+                                                 start.isAfter(b.getEndBooking().toLocalDate())      ))
                                  .collect(Collectors.toSet()) : new HashSet<>();
 
         log.debug("start booking date is: "+ startDate.toString() );
@@ -134,11 +145,11 @@ public class CustomerServiceImpl{
             custo.setRoom(replacingRoom);
 
             float roomPrice = custo.getRoom().getPrice();
-
             log.debug("roomPrice bill is: "+ roomPrice);
 
             float bill  = ( roomPrice * customerBookingDates.size() );
             custo.setBill(bill);
+            
             return  customerRepo.save(custo);
            }
         throw  new RoomIsBookedException("Room is already booked for this days!!!!");
@@ -146,8 +157,8 @@ public class CustomerServiceImpl{
 
     /**  create customer**/
     @Transactional
-    @CacheEvict(value="customersDTO",allEntries=true,condition = "#result != null")
-    public Customer create (Customer customer)  throws RoomIsBookedException,RoomCapacitySurpassedException{
+    @CacheEvict(value="customers",allEntries=true,condition = "#result != null")
+    public Customer create (Customer customer) {
 
         final LocalDate start = customer.getBooking().getStartBooking().toLocalDate();
         log.debug("start day is" +start.toString());

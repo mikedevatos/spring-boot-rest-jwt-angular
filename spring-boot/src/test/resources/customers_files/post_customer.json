@@ -1,0 +1,25 @@
+{
+  "bill": 0,
+  "accountType": "vacation_test",
+  "persons": [
+    {
+      "firstName": "firtsname_test",
+      "lastName": "lastname_test",
+      "email": "email@_test"
+    },
+    {
+      "firstName": "firtsname_test_2",
+      "lastName": "lastname_test_2",
+      "email": "email@_test_2"
+    }
+  ],
+  "booking": {
+    "startBooking": "2021-11-09",
+    "endBooking": "2021-11-11"
+  },
+  "room": {
+    "id": 1,
+    "price": 698.0,
+    "roomCapacity": 2
+  }
+}

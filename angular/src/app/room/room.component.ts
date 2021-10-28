@@ -20,7 +20,6 @@ import { MessageResultService } from '../services/message-result.service';
 
 })
 export class RoomComponent implements OnInit {
-
   customers: any = [];
   rooms: any = [];
 
@@ -37,10 +36,9 @@ export class RoomComponent implements OnInit {
   formPrice: Map<number, FormControl> = new Map<number, FormControl>();
   formRoomCapacity: Map<number, FormControl> = new Map<number, FormControl>();
 
-  addRoomRecord: boolean;
   loading: boolean;
   handleOkCloseDrawer: boolean;
-  isVisibleModal: boolean;
+  isVisibleAddRoom:boolean;
   userManagerAuth: boolean;
   isLoading: boolean;
   preventCall_OnQueryParams: boolean;
@@ -64,9 +62,7 @@ export class RoomComponent implements OnInit {
     this.loading = true;
     this.pageSize = 5;
     this.isLoading = false;
-    this.isVisibleModal = false;
-
-    this.isVisibleModal = false;
+    this.isVisibleAddRoom = false;
     this.pageIndex = 1;
 
     if (!isUndefined(pageInx))
@@ -155,18 +151,15 @@ export class RoomComponent implements OnInit {
   }
 
 
-  saveAddingRoom(idEditMap: number) {
-    const room = this.editMap.get(idEditMap) as Room;
+  saveAddingRoom() {
+    const roomCp = clone(this.addingRoom);
 
-    const roomCopy = cloneDeep(room);
+    this.postRoom(roomCp);
 
-    this.postRoom(roomCopy);
-
-    this.addRoomRecord = false;
+    this.addingRoom={}
   }
 
   updateRoom(idRoom: number) {
-
     const room = this.rooms.find(item => item.id === idRoom);
 
     room.editRoom = false;
@@ -194,7 +187,6 @@ export class RoomComponent implements OnInit {
 
     this.addingRoom=room;
 
-    this.addRoomRecord = true;
 
     this.inputFormValidators(this.addRoomId);
     this.openAddRoomModal();
@@ -205,22 +197,14 @@ export class RoomComponent implements OnInit {
     this.logoutService.logout();
   }
 
-  createModal() {
-    this.isVisibleModal = true;
-  }
-
-  destroyModal(): void {
-    this.isVisibleModal = false;
-  }
-
 
   openAddRoomModal(): void {
-    this.isVisibleModal = true;
+    this.isVisibleAddRoom = true;
   }
 
+
   closeAddRoomModal(): void {
-    this.isVisibleModal = false;
-    this.addRoomRecord = false;
+    this.isVisibleAddRoom = false;
   }
 
 
@@ -254,15 +238,17 @@ export class RoomComponent implements OnInit {
   }
 
 
-  postRoom(customer: Room) {
+  postRoom(room: Room) {
     const firstPage = 1;
-    this.httpService.postRequestRoom(customer)
+    this.httpService.postRequestRoom(room)
       .subscribe(res => { console.log(res); },
         error => {
           console.log(error);
+          this.closeAddRoomModal();
           this.messageResult.error('something went wrong saving room');
         },
         () => {
+          this.closeAddRoomModal();
           this.messageResult.success('success adding room');
           this.getPageData(firstPage);
         });

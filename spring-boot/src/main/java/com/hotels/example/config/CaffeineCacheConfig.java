@@ -6,17 +6,16 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.TimeUnit;
+
 @Configuration
 public class CaffeineCacheConfig {
 
 
     @Bean
     public CacheManager caffeineCacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("customersDTO",
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("customers",
                                                                                  "roomBookings",
-                                                                                 "roomsDTO",
-                                                                                 "rooms",
-                                                                                 "employeesDTO"
+                                                                                 "employees"
         );
 
         cacheManager.setCaffeine(caffeineCacheBuilder());

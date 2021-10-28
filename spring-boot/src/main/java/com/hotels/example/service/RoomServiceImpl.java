@@ -3,15 +3,18 @@ package com.hotels.example.service;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.hotels.example.errors.RoomCapacitySurpassedException;
+import com.hotels.example.errors.RoomIsBookedException;
 import com.hotels.example.model.Booking;
 import com.hotels.example.model.Customer;
 import com.hotels.example.model.Room;
 import com.hotels.example.model.Views;
 import com.hotels.example.repositories.RoomRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +31,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class RoomServiceImpl {
-
-    Logger log = LoggerFactory.getLogger(RoomServiceImpl.class);
 
     private RoomRepo roomRepo;
 
@@ -39,25 +41,21 @@ public class RoomServiceImpl {
         this.roomRepo = roomRepo;
     }
 
-
+    @Cacheable(cacheNames="roomBookings",key="#id",cacheManager = "caffeineCacheManager")
     public List<Booking> allRoomBookings(Integer id ){
 
         Optional<Room> room = findById(id);
-
         List<Booking> bookings =new ArrayList<>();
 
         if   ( room.isPresent()  ) {
-          bookings =       !room.get().getCustomers().isEmpty()                   ?
-                            room.get().getCustomers()
-                                       .stream()
-                                       .map (Customer::getBooking)
-
-                                       .collect(Collectors.toList())    : new ArrayList<>();
+          bookings =      !room.get().getCustomers().isEmpty()                   ?
+                           room.get().getCustomers()
+                          .stream()
+                          .map (Customer::getBooking)
+                          .collect(Collectors.toList()) : new ArrayList<>();
          }
-
          return bookings;
     }
-
 
     public List<Room> findAll() {
         List<Room> rooms= roomRepo.findAll();
@@ -77,11 +75,8 @@ public class RoomServiceImpl {
 
     @Transactional
     @Caching( evict = {
-            @CacheEvict(value = "roomsDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
-            @CacheEvict(value="rooms",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
+            @CacheEvict(value="customers",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
             @CacheEvict(value="roomBookings",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null")
-
     })
     public  Room create(Room room)  {
         return  roomRepo.save(room);
@@ -91,12 +86,10 @@ public class RoomServiceImpl {
     /** updating room **/
     @Transactional(rollbackFor = RoomCapacitySurpassedException.class)
     @Caching( evict = {
-            @CacheEvict(value="rooms",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
-            @CacheEvict(value="roomsDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
             @CacheEvict(value="roomBookings",key = "#room.getId()",cacheManager = "caffeineCacheManager",condition = "#result != null"),
-            @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
+            @CacheEvict(value="customers",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
     })
-    public Room update(Room room)  throws RoomCapacitySurpassedException {
+    public Room update(Room room){
 
         Room initialState = roomRepo.findById( room.getId() )
                                    .orElseThrow(EntityNotFoundException::new);
@@ -106,7 +99,6 @@ public class RoomServiceImpl {
         boolean  isRoomCapacitySurpassed  = !initialState.getCustomers().isEmpty() && initialState.getCustomers()
                                                          .stream()
                                                          .anyMatch(c -> c.getPersons().size() > room.getRoomCapacity());
-
 
         if(isRoomCapacitySurpassed)
             throw new RoomCapacitySurpassedException("cant update room  capacity persons surpassed it");
@@ -118,15 +110,13 @@ public class RoomServiceImpl {
     /** deleting room **/
      @Transactional
      @Caching( evict = {
-             @CacheEvict(value="rooms",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result == true"),
-             @CacheEvict(value="roomsDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result == true"),
              @CacheEvict(value="roomBookings",key = "#roomId",cacheManager = "caffeineCacheManager",condition = "#result == true"),
-             @CacheEvict(value="customersDTO",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
+             @CacheEvict(value="customers",allEntries = true,cacheManager = "caffeineCacheManager",condition = "#result != null"),
      })
     public boolean deleteById(Integer roomId){
          Room room = findBy_Id(roomId);
           if( !room.getCustomers().isEmpty() )
-              throw  new RuntimeException("can't delete not empty room");
+              throw  new RoomIsBookedException("can't delete not empty room");
 
          roomRepo.deleteById(roomId);
         return true;

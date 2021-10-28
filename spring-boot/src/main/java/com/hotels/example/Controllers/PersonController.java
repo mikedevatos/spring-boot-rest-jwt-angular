@@ -61,7 +61,6 @@ public class PersonController {
 
 
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    @SneakyThrows
     public ResponseEntity<PersonUpdateDTO> create(@Valid @RequestBody PersonUpdateDTO personDTO)  {
 
       if(personDTO.getId() == null && this.customerRepo.existsById(personDTO.getCustomerId() ) ){

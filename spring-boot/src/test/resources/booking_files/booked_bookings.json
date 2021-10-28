@@ -1,0 +1,22 @@
+[
+
+  {
+    "id":"11",
+    "startBooking":"2021-09-29",
+    "endBooking":"2021-10-16"
+  },
+
+  {
+    "id":"6",
+    "startBooking":"2021-09-11",
+    "endBooking":"2021-09-25"
+  },
+
+  {
+    "id":"1",
+    "startBooking":"2021-09-05",
+    "endBooking":"2021-09-22"
+  }
+
+
+]

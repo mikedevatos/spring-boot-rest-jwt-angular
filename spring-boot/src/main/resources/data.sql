@@ -22,7 +22,9 @@ INSERT INTO room (id,price,room_capacity) VALUES
 (4,333,4),
 (5,444,4),
 (6,333,4),
-(7,777,4);
+(7,777,4),
+(8,888,4),
+(9,999,2);
 
 
 INSERT INTO booking(id,start_booking,end_booking) values (1,'2021-09-09','2021-09-11');
